@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DB9CF38C-4246-43DA-8A93-0C4137671022}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>gm_nethook</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\obj\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\obj\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>GMMODULE;WIN32;_DEBUG;_WINDOWS;_USRDLL;GM_NETHOOK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\include\gm;..\thirdparty\include;$(SOURCE_SDK_2013)\common;$(SOURCE_SDK_2013)\public;$(SOURCE_SDK_2013)\public\tier0;$(SOURCE_SDK_2013)\public\tier1;$(SOURCE_SDK_2013)\public\mathlib;$(SOURCE_SDK_2013)\public\engine;$(SOURCE_SDK_2013)\game\shared;$(SOURCE_SDK_2013)\game\client;$(SOURCE_SDK_2013)\game\server;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\thirdparty\lib;$(SOURCE_SDK_2013)\lib\public;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>tier0.lib;tier1.lib;ws2_32.lib;detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>GMMODULE;WIN32;NDEBUG;_WINDOWS;_USRDLL;GM_NETHOOK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\include\gm;..\thirdparty\include;$(SOURCE_SDK_2013)\common;$(SOURCE_SDK_2013)\public;$(SOURCE_SDK_2013)\public\tier0;$(SOURCE_SDK_2013)\public\tier1;$(SOURCE_SDK_2013)\public\mathlib;$(SOURCE_SDK_2013)\public\engine;$(SOURCE_SDK_2013)\game\shared;$(SOURCE_SDK_2013)\game\client;$(SOURCE_SDK_2013)\game\server;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>tier0.lib;tier1.lib;ws2_32.lib;detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\thirdparty\lib;$(SOURCE_SDK_2013)\lib\public;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\CNetMessage.hpp" />
+    <ClInclude Include="..\include\CNetMessageRegistration.hpp" />
+    <ClInclude Include="..\include\CSigScan.hpp" />
+    <ClInclude Include="..\include\CSimpleDetour.hpp" />
+    <ClInclude Include="..\include\FuncPtr.hpp" />
+    <ClInclude Include="..\include\gm\CLuaInterface.hpp" />
+    <ClInclude Include="..\include\gm\CLuaObject.hpp" />
+    <ClInclude Include="..\include\gm\CStateManager.hpp" />
+    <ClInclude Include="..\include\gm\Lua.hpp" />
+    <ClInclude Include="..\include\gm\LuaBase.hpp" />
+    <ClInclude Include="..\include\gm\Types.hpp" />
+    <ClInclude Include="..\include\gm\UserData.hpp" />
+    <ClInclude Include="..\include\MemorySignature.hpp" />
+    <ClInclude Include="..\include\NetMessageManager.hpp" />
+    <ClInclude Include="..\include\Signatures.hpp" />
+    <ClInclude Include="..\include\Util.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\CNetMessageRegistration.cpp" />
+    <ClCompile Include="..\src\CSigScan.cpp" />
+    <ClCompile Include="..\src\gm\CLuaInterface.cpp" />
+    <ClCompile Include="..\src\gm\CLuaObject.cpp" />
+    <ClCompile Include="..\src\gm\CStateManager.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\messages\svc_Print.cpp" />
+    <ClCompile Include="..\src\NetMessageManager.cpp" />
+    <ClCompile Include="..\src\Util.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
