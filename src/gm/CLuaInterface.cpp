@@ -6,31 +6,31 @@
 
 using namespace GarrysMod::Lua;
 
-CLuaInterface::CLuaInterface(lua_State* state) 
-	: m_pState(state),
-	  m_pLua(state->luabase),
-	  m_G(state->luabase),
-	  m_R(state->luabase),
-	  m_E(state->luabase),
-	  m_errorNoHalt(state->luabase),
-	  m_hookCall(state->luabase)
+CLuaInterface::CLuaInterface(lua_State* state)
+    : m_pState(state),
+    m_pLua(state->luabase),
+    m_G(state->luabase),
+    m_R(state->luabase),
+    m_E(state->luabase),
+    m_errorNoHalt(state->luabase),
+    m_hookCall(state->luabase)
 {
-	// TODO: avoid a shitty constructor for CLuaObject here
+    // TODO: avoid a shitty constructor for CLuaObject here
 
-	printf("CLuaInterface constructor\n");
+    printf("CLuaInterface constructor\n");
 
-	m_pLua->PushSpecial(SPECIAL_GLOB);
-	CLuaObject m_G(m_pLua, m_pLua->ReferenceCreate());
+    m_pLua->PushSpecial(SPECIAL_GLOB);
+    CLuaObject m_G(m_pLua, m_pLua->ReferenceCreate());
 
-	m_pLua->PushSpecial(SPECIAL_REG);
-	CLuaObject m_R(m_pLua, m_pLua->ReferenceCreate());
+    m_pLua->PushSpecial(SPECIAL_REG);
+    CLuaObject m_R(m_pLua, m_pLua->ReferenceCreate());
 
-	m_pLua->PushSpecial(SPECIAL_ENV);
-	CLuaObject m_E(m_pLua, m_pLua->ReferenceCreate());
+    m_pLua->PushSpecial(SPECIAL_ENV);
+    CLuaObject m_E(m_pLua, m_pLua->ReferenceCreate());
 
-	m_errorNoHalt = GetGlobal("ErrorNoHalt");
+    m_errorNoHalt = GetGlobal("ErrorNoHalt");
 
-	m_hookCall = GetGlobal("hook").GetMember("Call"); // TODO: Move this instead of copy
+    m_hookCall = GetGlobal("hook").GetMember("Call"); // TODO: Move this instead of copy
 }
 
 CLuaInterface::~CLuaInterface()
@@ -39,373 +39,373 @@ CLuaInterface::~CLuaInterface()
 
 lua_State* CLuaInterface::GetLuaState()
 {
-	return m_pState;
+    return m_pState;
 }
 
 CLuaObject& CLuaInterface::Global()
 {
-	return m_G;
+    return m_G;
 }
 
 CLuaObject& CLuaInterface::Registry()
 {
-	return m_R;
+    return m_R;
 }
 
 CLuaObject& CLuaInterface::Environment()
 {
-	return m_E;
+    return m_E;
 }
 
 CLuaObject CLuaInterface::GetNewTable()
 {
-	NewTable();
-	return CLuaObject(m_pLua, m_pLua->ReferenceCreate());
+    NewTable();
+    return CLuaObject(m_pLua, m_pLua->ReferenceCreate());
 }
 
 void CLuaInterface::NewTable()
 {
-	m_pLua->CreateTable();
+    m_pLua->CreateTable();
 }
 
 CLuaObject CLuaInterface::NewTemporaryObject()
 {
-	m_pLua->PushNil();
-	return CLuaObject(m_pLua, m_pLua->ReferenceCreate());
+    m_pLua->PushNil();
+    return CLuaObject(m_pLua, m_pLua->ReferenceCreate());
 }
 
 CLuaObject CLuaInterface::NewUserData(const CLuaObject& metaT)
 {
-	UserData* data = (UserData*)m_pLua->NewUserdata(sizeof(UserData));
-	CLuaObject obj = CLuaObject(m_pLua, m_pLua->ReferenceCreate());
+    UserData* data = (UserData*)m_pLua->NewUserdata(sizeof(UserData));
+    CLuaObject obj = CLuaObject(m_pLua, m_pLua->ReferenceCreate());
 
-	obj.Push(); // +1
-		metaT.Push(); // +1
-		m_pLua->SetMetaTable(-2); // -1
-	m_pLua->Pop(); // -1
+    obj.Push(); // +1
+    metaT.Push(); // +1
+    m_pLua->SetMetaTable(-2); // -1
+    m_pLua->Pop(); // -1
 
-	return obj;
+    return obj;
 }
 
 void CLuaInterface::PushUserData(const CLuaObject& metaT, void * v, unsigned char type)
 {
-	UserData* data = (UserData*)m_pLua->NewUserdata(sizeof(UserData));
-	data->data = v;
-	data->type = type;
+    UserData* data = (UserData*)m_pLua->NewUserdata(sizeof(UserData));
+    data->data = v;
+    data->type = type;
 
-	int iRef = m_pLua->ReferenceCreate();
+    int iRef = m_pLua->ReferenceCreate();
 
-	m_pLua->ReferencePush(iRef);
-		metaT.Push(); // +1
-		m_pLua->SetMetaTable(-2); // -1
-	m_pLua->ReferenceFree(iRef);
+    m_pLua->ReferencePush(iRef);
+    metaT.Push(); // +1
+    m_pLua->SetMetaTable(-2); // -1
+    m_pLua->ReferenceFree(iRef);
 }
 
 void CLuaInterface::Error(const char* strError, ...)
 {
-	char buff[1024];
+    char buff[1024];
 
-	va_list argptr;
-	va_start(argptr, strError);
+    va_list argptr;
+    va_start(argptr, strError);
 #ifdef _LINUX
-	vsprintf(buff, strError, argptr);
+    vsprintf(buff, strError, argptr);
 #else
-	vsprintf_s(buff, strError, argptr);
+    vsprintf_s(buff, strError, argptr);
 #endif
-	va_end(argptr);
+    va_end(argptr);
 
-	m_pLua->ThrowError(buff);
+    m_pLua->ThrowError(buff);
 }
 
 void CLuaInterface::ErrorNoHalt(const char* strError, ...)
 {
-	char buff[1024];
-	va_list argptr;
-	va_start(argptr, strError);
+    char buff[1024];
+    va_list argptr;
+    va_start(argptr, strError);
 #ifdef _LINUX
-	vsprintf(buff, strError, argptr);
+    vsprintf(buff, strError, argptr);
 #else
-	vsprintf_s(buff, strError, argptr);
+    vsprintf_s(buff, strError, argptr);
 #endif
-	va_end(argptr);
+    va_end(argptr);
 
-	m_errorNoHalt.Push();
-		m_pLua->PushString(strError);
-	m_pLua->Call(1,0);
+    m_errorNoHalt.Push();
+    m_pLua->PushString(strError);
+    m_pLua->Call(1, 0);
 }
 
 void CLuaInterface::LuaError(const char* strError, int argument)
 {
-	m_pLua->ArgError(argument, strError);
+    m_pLua->ArgError(argument, strError);
 }
 
 CLuaObject CLuaInterface::GetGlobal(const char* name)
 {
-	m_pLua->PushSpecial(SPECIAL_GLOB); // +1
-		m_pLua->GetField(-1, name); // +1
-		int ref = m_pLua->ReferenceCreate(); // -1
-	m_pLua->Pop();
-	return CLuaObject(m_pLua, ref);
+    m_pLua->PushSpecial(SPECIAL_GLOB); // +1
+    m_pLua->GetField(-1, name); // +1
+    int ref = m_pLua->ReferenceCreate(); // -1
+    m_pLua->Pop();
+    return CLuaObject(m_pLua, ref);
 }
 
 void CLuaInterface::SetGlobal(const char* name, CFunc f)
 {
-	m_pLua->PushSpecial(SPECIAL_GLOB); // +1
-		m_pLua->PushString(name); // +1
-		m_pLua->PushCFunction(f); // +1
-		m_pLua->SetTable(-3); // -2
-	m_pLua->Pop(); // -1
+    m_pLua->PushSpecial(SPECIAL_GLOB); // +1
+    m_pLua->PushString(name); // +1
+    m_pLua->PushCFunction(f); // +1
+    m_pLua->SetTable(-3); // -2
+    m_pLua->Pop(); // -1
 }
 
 void CLuaInterface::SetGlobal(const char* name, double d)
 {
-	m_pLua->PushSpecial(SPECIAL_GLOB); // +1
-		m_pLua->PushString(name); // +1
-		m_pLua->PushNumber(d); // +1
-		m_pLua->SetTable(-3); // -2
-	m_pLua->Pop(); // -1
+    m_pLua->PushSpecial(SPECIAL_GLOB); // +1
+    m_pLua->PushString(name); // +1
+    m_pLua->PushNumber(d); // +1
+    m_pLua->SetTable(-3); // -2
+    m_pLua->Pop(); // -1
 }
 
 void CLuaInterface::SetGlobal(const char* name, const char* str)
 {
-	m_pLua->PushSpecial(SPECIAL_GLOB); // +1
-		m_pLua->PushString(name); // +1
-		m_pLua->PushString(str); // +1
-		m_pLua->SetTable(-3); // -2
-	m_pLua->Pop(); // -1
+    m_pLua->PushSpecial(SPECIAL_GLOB); // +1
+    m_pLua->PushString(name); // +1
+    m_pLua->PushString(str); // +1
+    m_pLua->SetTable(-3); // -2
+    m_pLua->Pop(); // -1
 }
 
 void CLuaInterface::SetGlobal(const char* name, bool b)
 {
-	m_pLua->PushSpecial(SPECIAL_GLOB); // +1
-		m_pLua->PushString(name); // +1
-		m_pLua->PushBool(b); // +1
-		m_pLua->SetTable(-3); // -2
-	m_pLua->Pop(); // -1
+    m_pLua->PushSpecial(SPECIAL_GLOB); // +1
+    m_pLua->PushString(name); // +1
+    m_pLua->PushBool(b); // +1
+    m_pLua->SetTable(-3); // -2
+    m_pLua->Pop(); // -1
 }
 
 void CLuaInterface::SetGlobal(const char* name, void* u)
 {
-	m_pLua->PushSpecial(SPECIAL_GLOB); // +1
-		m_pLua->PushString(name); // +1
-		m_pLua->PushUserdata(u); // +1
-		m_pLua->SetTable(-3); // -2
-	m_pLua->Pop(); // -1
+    m_pLua->PushSpecial(SPECIAL_GLOB); // +1
+    m_pLua->PushString(name); // +1
+    m_pLua->PushUserdata(u); // +1
+    m_pLua->SetTable(-3); // -2
+    m_pLua->Pop(); // -1
 }
 
 void CLuaInterface::SetGlobal(const char* name, const CLuaObject& o)
 {
-	m_pLua->PushSpecial(SPECIAL_GLOB); // +1
-		m_pLua->PushString(name); // +1
-		o.Push(); // +1
-		m_pLua->SetTable(-3); // -2
-	m_pLua->Pop(); // -1
+    m_pLua->PushSpecial(SPECIAL_GLOB); // +1
+    m_pLua->PushString(name); // +1
+    o.Push(); // +1
+    m_pLua->SetTable(-3); // -2
+    m_pLua->Pop(); // -1
 }
 
 void CLuaInterface::RemoveGlobal(const char* name)
 {
-	m_pLua->PushSpecial(SPECIAL_GLOB); // +1
-		m_pLua->PushString(name); // +1
-		m_pLua->PushNil(); // +1
-		m_pLua->SetTable(-3); // -2
-	m_pLua->Pop(); // -1
+    m_pLua->PushSpecial(SPECIAL_GLOB); // +1
+    m_pLua->PushString(name); // +1
+    m_pLua->PushNil(); // +1
+    m_pLua->SetTable(-3); // -2
+    m_pLua->Pop(); // -1
 }
 
 void CLuaInterface::NewGlobalTable(const char* name)
 {
-	m_pLua->PushSpecial(SPECIAL_GLOB); // +1
-		m_pLua->PushString(name); // +1
-		m_pLua->CreateTable();
-		m_pLua->SetTable(-3); // -2
-	m_pLua->Pop(); // -1
+    m_pLua->PushSpecial(SPECIAL_GLOB); // +1
+    m_pLua->PushString(name); // +1
+    m_pLua->CreateTable();
+    m_pLua->SetTable(-3); // -2
+    m_pLua->Pop(); // -1
 }
 
 CLuaObject CLuaInterface::GetObject(int i)
 {
-	if(i != 0)
-		m_pLua->Push(i); // +1
-	return CLuaObject(m_pLua, m_pLua->ReferenceCreate()); // -1
+    if (i != 0)
+        m_pLua->Push(i); // +1
+    return CLuaObject(m_pLua, m_pLua->ReferenceCreate()); // -1
 }
 
 const char* CLuaInterface::GetString(int i, unsigned int* iLen)
 {
-	return m_pLua->GetString(i, iLen);
+    return m_pLua->GetString(i, iLen);
 }
 
 int CLuaInterface::GetInteger(int i)
 {
-	return (int)GetNumber(i);
+    return (int)GetNumber(i);
 }
 
 double CLuaInterface::GetNumber(int i)
 {
-	return m_pLua->GetNumber(i);
+    return m_pLua->GetNumber(i);
 }
 
 double CLuaInterface::GetDouble(int i)
 {
-	return GetNumber(i);
+    return GetNumber(i);
 }
 
 float CLuaInterface::GetFloat(int i)
 {
-	return (float)GetNumber(i);
+    return (float)GetNumber(i);
 }
 
 bool CLuaInterface::GetBool(int i)
 {
-	return m_pLua->GetBool(i);
+    return m_pLua->GetBool(i);
 }
 
 void** CLuaInterface::GetUserDataPtr(int i)
 {
-	UserData* data = (UserData*) m_pLua->GetUserdata(i);
-	return &data->data; // Not sure if this is correct
+    UserData* data = (UserData*)m_pLua->GetUserdata(i);
+    return &data->data; // Not sure if this is correct
 }
 
 void* CLuaInterface::GetUserData(int i)
 {
-	UserData* data = (UserData*)m_pLua->GetUserdata(i);
-	return data->data;
+    UserData* data = (UserData*)m_pLua->GetUserdata(i);
+    return data->data;
 }
 
 void CLuaInterface::GetTable(int i) // ???
 {
-	Error("CLuaInterface::GetTable( int i ) is not implemented yet, but feel free to contribute!");
+    Error("CLuaInterface::GetTable( int i ) is not implemented yet, but feel free to contribute!");
 }
 
 const char* CLuaInterface::GetStringOrError(int i)
 {
-	m_pLua->CheckType(i, Type::STRING);
-	return m_pLua->GetString(i);
+    m_pLua->CheckType(i, Type::STRING);
+    return m_pLua->GetString(i);
 }
 
 int CLuaInterface::GetReference(int i)
 {
-	if(i != 0)
-		m_pLua->Push(i); // +??
-	return m_pLua->ReferenceCreate();
+    if (i != 0)
+        m_pLua->Push(i); // +??
+    return m_pLua->ReferenceCreate();
 }
 
 void CLuaInterface::FreeReference(int i)
 {
-	m_pLua->ReferenceFree(i);
+    m_pLua->ReferenceFree(i);
 }
 
 void CLuaInterface::PushReference(int i)
 {
-	m_pLua->ReferencePush(i);
+    m_pLua->ReferencePush(i);
 }
 
 void CLuaInterface::Pop(int i)
 {
-	m_pLua->Pop(i);
+    m_pLua->Pop(i);
 }
 
 int CLuaInterface::Top()
 {
-	return m_pLua->Top();
+    return m_pLua->Top();
 }
 
 void CLuaInterface::Push(const CLuaObject& o)
 {
-	o.Push();
+    o.Push();
 }
 
 void CLuaInterface::Push(const char* str, unsigned int iLen)
 {
-	m_pLua->PushString(str, iLen);
+    m_pLua->PushString(str, iLen);
 }
 
 void CLuaInterface::PushVA(const char* str, ...)
 {
-	char buff[1024];
-	va_list argptr;
-	va_start(argptr, str);
+    char buff[1024];
+    va_list argptr;
+    va_start(argptr, str);
 #ifdef _LINUX
-	vsprintf( buff, str, argptr );
+    vsprintf( buff, str, argptr );
 #else
-	vsprintf_s(buff, str, argptr);
+    vsprintf_s(buff, str, argptr);
 #endif
-	va_end(argptr);
-	m_pLua->PushString(buff);
+    va_end(argptr);
+    m_pLua->PushString(buff);
 }
 
 void CLuaInterface::Push(double d)
 {
-	m_pLua->PushNumber(d);
+    m_pLua->PushNumber(d);
 }
 
 void CLuaInterface::Push(bool b)
 {
-	m_pLua->PushBool(b);
+    m_pLua->PushBool(b);
 }
 
 void CLuaInterface::Push(CFunc f)
 {
-	m_pLua->PushCFunction(f);
+    m_pLua->PushCFunction(f);
 }
 
 void CLuaInterface::Push(int i)
 {
-	m_pLua->PushNumber(i);
+    m_pLua->PushNumber(i);
 }
 
 void CLuaInterface::Push(float f)
 {
-	m_pLua->PushNumber(f);
+    m_pLua->PushNumber(f);
 }
 
 void CLuaInterface::PushLong(int i)
 {
-	m_pLua->PushNumber(i);
+    m_pLua->PushNumber(i);
 }
 
 void CLuaInterface::PushNil()
 {
-	m_pLua->PushNil();
+    m_pLua->PushNil();
 }
 
 void CLuaInterface::CheckType(int i, int iType)
 {
-	m_pLua->CheckType(i, iType);
+    m_pLua->CheckType(i, iType);
 }
 
 int CLuaInterface::GetType(int iStackPos)
 {
-	return m_pLua->GetType(iStackPos);
+    return m_pLua->GetType(iStackPos);
 }
 
 const char* CLuaInterface::GetTypeName(int iType)
 {
-	return m_pLua->GetTypeName(iType);
+    return m_pLua->GetTypeName(iType);
 }
 
 CLuaObject CLuaInterface::GetReturn(int iNum)
 {
-	return GetObject(iNum);
+    return GetObject(iNum);
 }
 
 void CLuaInterface::Call(int args, int returns)
 {
-	m_pLua->Call(args, returns);
+    m_pLua->Call(args, returns);
 }
 
 int CLuaInterface::PCall(int args, int returns, int iErrorFunc)
 {
-	return m_pLua->PCall(args, returns, iErrorFunc);
+    return m_pLua->PCall(args, returns, iErrorFunc);
 }
 
 CLuaObject CLuaInterface::GetMetaTable(const char* strName, int iType)
 {
-	m_pLua->CreateMetaTableType(strName, iType);
-	return CLuaObject(m_pLua, m_pLua->ReferenceCreate());
+    m_pLua->CreateMetaTableType(strName, iType);
+    return CLuaObject(m_pLua, m_pLua->ReferenceCreate());
 }
 
 CLuaObject CLuaInterface::GetMetaTable(int i)
 {
-	if(m_pLua->GetMetaTable(i))
-		return CLuaObject(m_pLua, m_pLua->ReferenceCreate());
-	else
-		return CLuaObject(m_pLua); // A nil object
+    if (m_pLua->GetMetaTable(i))
+        return CLuaObject(m_pLua, m_pLua->ReferenceCreate());
+    else
+        return CLuaObject(m_pLua); // A nil object
 }

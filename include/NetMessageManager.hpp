@@ -7,17 +7,15 @@
 class NetMessageResolverException : public std::runtime_error
 {
 public:
-	NetMessageResolverException(const std::string& errorStr)
-		: std::runtime_error(errorStr)
-	{
-	}
+    NetMessageResolverException(const std::string& errorStr)
+        : std::runtime_error(errorStr) {}
 };
 
 namespace NetMessageManager
 {
-	void ResolveMessages();
-	void AddMessagesToLua(GarrysMod::Lua::CLuaInterface& Lua);
-	void UnhookAllMessages();
+    void ResolveMessages();
+    void AddMessagesToLua(GarrysMod::Lua::CLuaInterface& Lua);
+    void UnhookAllMessages();
 }
 
 #endif

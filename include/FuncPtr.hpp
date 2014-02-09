@@ -3,8 +3,8 @@
 
 template<typename T>
 union FuncPtr {
-	T func;
-	void* voidPtr;
+    T func;
+    void* voidPtr;
 };
 
 #endif

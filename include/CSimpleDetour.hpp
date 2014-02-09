@@ -12,63 +12,57 @@
 class DetourException : public std::runtime_error
 {
 public:
-	DetourException(const std::string& errorStr)
-		: std::runtime_error(errorStr)
-	{
-	}
+    DetourException(const std::string& errorStr)
+        : std::runtime_error(errorStr) {}
 };
 
 template <class T>
 class CSimpleDetour
 {
 public:
-	CSimpleDetour(FuncPtr<T>* old, FuncPtr<T> replacement)
-		: m_fnOld(old), m_fnReplacement(replacement)
-	{}
+    CSimpleDetour(FuncPtr<T>* old, FuncPtr<T> replacement)
+        : m_fnOld(old), m_fnReplacement(replacement) {}
 
-	void Attach()
-	{
-		DetourTransactionBegin();
-		DetourUpdateThread(GetCurrentThread());
+    void Attach()
+    {
+        DetourTransactionBegin();
+        DetourUpdateThread(GetCurrentThread());
 
-		DetourAttach(&(m_fnOld->voidPtr), m_fnReplacement.voidPtr);
+        DetourAttach(&(m_fnOld->voidPtr), m_fnReplacement.voidPtr);
 
-		LONG result = DetourTransactionCommit();
-		if (result != NO_ERROR)
-		{
-			throw DetourException(Util::Format("Failed to attach detour (Old = 0x%p, Hook = 0x%p, Result = 0x%X)", m_fnOld->voidPtr, m_fnReplacement.voidPtr, result));
-		}
+        LONG result = DetourTransactionCommit();
+        if (result != NO_ERROR)
+        {
+            throw DetourException(Util::Format("Failed to attach detour (Old = 0x%p, Hook = 0x%p, Result = 0x%X)", m_fnOld->voidPtr, m_fnReplacement.voidPtr, result));
+        }
 
-		m_bAttached = true;
-	}
+        m_bAttached = true;
+    }
 
-	void Detach()
-	{
-		if (!m_bAttached)
-			return;
+    void Detach()
+    {
+        if (!m_bAttached)
+            return;
 
-		DetourTransactionBegin();
-		DetourUpdateThread(GetCurrentThread());
+        DetourTransactionBegin();
+        DetourUpdateThread(GetCurrentThread());
 
-		DetourDetach(&(m_fnOld->voidPtr), m_fnReplacement.voidPtr);
+        DetourDetach(&(m_fnOld->voidPtr), m_fnReplacement.voidPtr);
 
-		LONG result = DetourTransactionCommit();
-		if (result != NO_ERROR)
-		{
-			throw DetourException(Util::Format("Failed to detach detour (Old = 0x%p, Hook = 0x%p, Result = 0x%X)", m_fnOld->voidPtr, m_fnReplacement.voidPtr, result));
-		}
+        LONG result = DetourTransactionCommit();
+        if (result != NO_ERROR)
+        {
+            throw DetourException(Util::Format("Failed to detach detour (Old = 0x%p, Hook = 0x%p, Result = 0x%X)", m_fnOld->voidPtr, m_fnReplacement.voidPtr, result));
+        }
 
-		m_bAttached = false;
-	}
+        m_bAttached = false;
+    }
 
 private:
-	FuncPtr<T>* m_fnOld;
-	FuncPtr<T> m_fnReplacement;
+    FuncPtr<T>* m_fnOld;
+    FuncPtr<T> m_fnReplacement;
 
-	bool m_bAttached;
+    bool m_bAttached;
 };
-
-#define SETUP_SIMPLE_DETOUR(name, old, replacement) \
-	CSimpleDetour name(&(void* &)old, replacement)
 
 #endif

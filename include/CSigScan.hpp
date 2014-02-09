@@ -11,25 +11,23 @@
 class SigScanException : public std::runtime_error
 {
 public:
-	SigScanException(const std::string& errorStr)
-		: std::runtime_error(errorStr)
-	{
-	}
+    SigScanException(const std::string& errorStr)
+        : std::runtime_error(errorStr) {}
 };
 
 class CSigScan
 {
 private:
-	char* m_moduleBase;
-	size_t m_moduleLen;
-	HMODULE m_moduleHandle;
-	
-public:
-	CSigScan(const std::string& moduleName);
+    char* m_moduleBase;
+    size_t m_moduleLen;
+    HMODULE m_moduleHandle;
 
-	void* Scan(const MemorySignature& sigStruct);
-	void* Scan(const char* sig, const char* mask, int sigLength);
-	void* Scan(const char* sig, const char* mask);
+public:
+    CSigScan(const std::string& moduleName);
+
+    void* Scan(const MemorySignature& sigStruct);
+    void* Scan(const char* sig, const char* mask, int sigLength);
+    void* Scan(const char* sig, const char* mask);
 };
 
 #endif

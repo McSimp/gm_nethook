@@ -9,21 +9,21 @@ CTemplatedRegistration<SVC_Print> Registration("svc_Print");
 
 class SVC_Print : public CNetMessage
 {
-	SVC_Print() { m_bReliable = false; m_text = NULL; };
+    SVC_Print() { m_bReliable = false; m_text = NULL; };
 
 public:
-	void* m_pMessageHandler;
-	const char* m_text;
+    void* m_pMessageHandler;
+    const char* m_text;
 
-	bool WriteHook(bf_write& buffer)
-	{
-		Msg("Hi there everything!\n");
-		return Registration.CallOriginalWrite(this, buffer);
-	}
+    bool WriteHook(bf_write& buffer)
+    {
+        Msg("Hi there everything!\n");
+        return Registration.CallOriginalWrite(this, buffer);
+    }
 
-	static void InitializeLua(CLuaInterface& Lua)
-	{
-		Msg("svc_Print is being added to Lua!\n");
-		Registration.Attach();
-	}
+    static void InitializeLua(CLuaInterface& Lua)
+    {
+        Msg("svc_Print is being added to Lua!\n");
+        Registration.Attach();
+    }
 };

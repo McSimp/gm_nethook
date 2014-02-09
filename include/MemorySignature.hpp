@@ -3,9 +3,9 @@
 
 struct MemorySignature
 {
-	const char* Sig;
-	const char* Mask;
-	int Length;
+    const char* Sig;
+    const char* Mask;
+    int Length;
 };
 
 #endif
