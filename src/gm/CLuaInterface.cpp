@@ -87,7 +87,7 @@ CLuaObject CLuaInterface::NewUserData(const CLuaObject& metaT)
     return obj;
 }
 
-void CLuaInterface::PushUserData(const CLuaObject& metaT, void * v, unsigned char type)
+void CLuaInterface::PushUserData(const CLuaObject& metaT, void* v, unsigned char type)
 {
     UserData* data = (UserData*)m_pLua->NewUserdata(sizeof(UserData));
     data->data = v;
@@ -263,8 +263,20 @@ void** CLuaInterface::GetUserDataPtr(int i)
     return &data->data; // Not sure if this is correct
 }
 
+// TODO: Make template
 void* CLuaInterface::GetUserData(int i)
 {
+    UserData* data = (UserData*)m_pLua->GetUserdata(i);
+    return data->data;
+}
+
+void* CLuaInterface::CheckAndGetUserData(int i, int type)
+{
+    if (m_pLua->GetType(1) != type)
+    {
+        m_pLua->ArgError(i, "invalid userdata type");
+    }
+
     UserData* data = (UserData*)m_pLua->GetUserdata(i);
     return data->data;
 }
@@ -368,7 +380,7 @@ void CLuaInterface::PushNil()
 
 void CLuaInterface::CheckType(int i, int iType)
 {
-    m_pLua->CheckType(i, iType);
+    return m_pLua->CheckType(i, iType);
 }
 
 int CLuaInterface::GetType(int iStackPos)

@@ -22,7 +22,7 @@ public:
     virtual bool ReadFromBuffer(bf_read &buffer) { return false; }
     virtual bool WriteToBuffer(bf_write &buffer) { return false; }
 
-    virtual bool IsReliable() { return false; }
+    virtual bool IsReliable() const { return false; }
 
     virtual int GetType() const { return 0; }
     virtual int GetGroup() const { return 0; }

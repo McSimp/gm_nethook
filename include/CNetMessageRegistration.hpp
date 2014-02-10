@@ -10,7 +10,6 @@
 
 typedef void (*tLuaSetupFunc) (GarrysMod::Lua::CLuaInterface& Lua);
 typedef bool (__thiscall* tMsgWriteFunc) (INetMessage* msg, bf_write& buffer);
-//typedef bool (__thiscall INetMessage::* tMsgWriteFunc) (bf_write& buffer);
 
 class CNetMessageRegistration
 {
@@ -36,25 +35,11 @@ public:
     void Detach();
 };
 
-
-// TODO: Make less terrible. I JUST WANT TO CAST IT TO A VOID* GOD DAMMIT
-template<class TOut, class TIn>
-FuncPtr<TOut> MakeFuncPtr(TIn in)
-{
-    FuncPtr<TIn> ptrIn;
-    ptrIn.func = in;
-
-    FuncPtr<TOut> ptrOut;
-    ptrOut.voidPtr = ptrIn.voidPtr;
-
-    return ptrOut;
-}
-
 template <class T>
-class CTemplatedRegistration : public CNetMessageRegistration
+class CMessageClassRegistration : public CNetMessageRegistration
 {
 public:
-    CTemplatedRegistration(const std::string& msgName)
+    CMessageClassRegistration(const std::string& msgName)
         : CNetMessageRegistration(msgName, MakeFuncPtr<tMsgWriteFunc>(&T::WriteHook), MakeFuncPtr<tLuaSetupFunc>(&T::InitializeLua))
     {}
 };

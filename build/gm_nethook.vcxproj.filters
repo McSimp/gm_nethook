@@ -72,6 +72,9 @@
     <ClInclude Include="..\include\Util.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\gm\LuaBindThunk.hpp">
+      <Filter>Header Files\gm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\gm\CLuaInterface.cpp">

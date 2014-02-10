@@ -26,8 +26,7 @@ DLL_EXPORT int gmod13_open(lua_State* L)
 {
     CLuaInterface& Lua = g_StateManager.SetupState(L);
 
-    Lua.SetGlobal("resolve", resolve);
-
+    resolve(L);
     Msg("[nethook] Loaded\n");
 
     return 0;

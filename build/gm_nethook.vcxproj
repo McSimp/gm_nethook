@@ -98,6 +98,7 @@
     <ClInclude Include="..\include\gm\CStateManager.hpp" />
     <ClInclude Include="..\include\gm\Lua.hpp" />
     <ClInclude Include="..\include\gm\LuaBase.hpp" />
+    <ClInclude Include="..\include\gm\LuaBindThunk.hpp" />
     <ClInclude Include="..\include\gm\Types.hpp" />
     <ClInclude Include="..\include\gm\UserData.hpp" />
     <ClInclude Include="..\include\MemorySignature.hpp" />

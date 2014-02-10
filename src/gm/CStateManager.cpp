@@ -49,5 +49,10 @@ CLuaInterface& CStateManager::GetInterface(lua_State* L)
     return SetupState(L);
 }
 
+const std::vector<CLuaInterface>& CStateManager::GetStates()
+{
+    return m_states;
+}
+
 // Global state manager
 CStateManager GarrysMod::Lua::g_StateManager;
