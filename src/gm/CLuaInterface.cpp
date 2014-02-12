@@ -393,7 +393,7 @@ const char* CLuaInterface::GetTypeName(int iType)
     return m_pLua->GetTypeName(iType);
 }
 
-CLuaObject CLuaInterface::GetReturn(int iNum)
+CLuaObject CLuaInterface::GetReturnObject(int iNum)
 {
     return GetObject(iNum);
 }
@@ -420,4 +420,9 @@ CLuaObject CLuaInterface::GetMetaTable(int i)
         return CLuaObject(m_pLua, m_pLua->ReferenceCreate());
     else
         return CLuaObject(m_pLua); // A nil object
+}
+
+const CLuaObject& CLuaInterface::GetHookCall()
+{
+    return m_hookCall;
 }

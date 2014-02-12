@@ -16,7 +16,7 @@ namespace GarrysMod
 			CLuaInterface& SetupState(lua_State* L);
 			void RemoveState(lua_State* L);
 			CLuaInterface& GetInterface(lua_State* L);
-            const std::vector<CLuaInterface>& GetStates();
+            std::vector<CLuaInterface>& GetStates();
 
 		private:
 			std::vector<CLuaInterface> m_states; // TODO: Profile

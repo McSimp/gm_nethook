@@ -49,7 +49,7 @@ CLuaInterface& CStateManager::GetInterface(lua_State* L)
     return SetupState(L);
 }
 
-const std::vector<CLuaInterface>& CStateManager::GetStates()
+std::vector<CLuaInterface>& CStateManager::GetStates()
 {
     return m_states;
 }

@@ -46,7 +46,7 @@ namespace GarrysMod
             void			NewGlobalTable(const char* name);
 
             CLuaObject		GetObject(int i = -1);
-            const char*		GetString(int i = -1, unsigned int* iLen = NULL);
+            const char*		GetString(int i = -1, unsigned int* iLen = nullptr);
             int				GetInteger(int i = -1);
             double			GetNumber(int i = -1);
             double			GetDouble(int i = -1);
@@ -81,17 +81,19 @@ namespace GarrysMod
             void			PushLong(int i);
             void			PushNil();
 
-            void			CheckType(int i, int iType); // Takes into account userdata types
-            int				GetType(int iStackPos); // Doesn't take into account userdata types
+            void			CheckType(int i, int iType);
+            int				GetType(int iStackPos);
             const char*		GetTypeName(int iType); // Only works for builtin Garry's Mod types
 
-            CLuaObject		GetReturn(int iNum);
+            CLuaObject		GetReturnObject(int iNum);
 
             void			Call(int args, int returns = 0);
             int				PCall(int args, int returns = 0, int iErrorFunc = 0);
 
             CLuaObject		GetMetaTable(const char* strName, int iType);
             CLuaObject		GetMetaTable(int i);
+
+            const CLuaObject&  GetHookCall();
 
             // Functions for interacting with bound classes
             template <class T>
