@@ -16,13 +16,12 @@ public:
     {
         for (CLuaInterface& Lua : g_StateManager.GetStates())
         {
-            Lua.GetHookCall().Push();
-            Lua.Push("SVC_Print_Write");
-            Lua.PushNil();
+            Lua.GetNetHookCallback().Push();
+            Lua.Push(R.GetMsgName().c_str());
             Lua.PushBoundObject(static_cast<T*>(this));
 
             // If the hook.Call succeeds
-            if (Lua.PCall(3, 1) != 0)
+            if (Lua.PCall(2, 1) != 0)
                 continue;
 
             // See if we got a bool as the return value

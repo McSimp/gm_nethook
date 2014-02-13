@@ -21,6 +21,8 @@ class CNetMessageRegistration
 
     FuncPtr<tLuaSetupFunc> m_luaSetupFunc;
 
+    std::string m_msgName;
+
 public:
     static std::map<std::string, CNetMessageRegistration&> RegisteredMessages;
 
@@ -33,6 +35,8 @@ public:
 
     void Attach();
     void Detach();
+
+    const std::string& GetMsgName();
 };
 
 template <class T>

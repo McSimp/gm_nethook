@@ -9,6 +9,7 @@ CNetMessageRegistration::CNetMessageRegistration(const std::string& msgName, Fun
     : m_writeHookFunc(writeHookFunc)
     , m_writeDetour(&m_writeOriginalFunc, m_writeHookFunc)
     , m_luaSetupFunc(luaSetupFunc)
+    , m_msgName(msgName)
 {
     RegisteredMessages.emplace(msgName, *this);
 }
@@ -46,4 +47,9 @@ void CNetMessageRegistration::Attach()
 void CNetMessageRegistration::Detach()
 {
     m_writeDetour.Detach();
+}
+
+const std::string& CNetMessageRegistration::GetMsgName()
+{
+    return m_msgName;
 }

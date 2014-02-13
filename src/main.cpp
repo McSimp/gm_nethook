@@ -1,9 +1,18 @@
 #include "gm/Lua.hpp"
 #include "gm/CLuaInterface.hpp"
 #include "gm/CStateManager.hpp"
+#include "gm/CLuaInterface.hpp"
 #include "NetMessageManager.hpp"
+#include "gm/LuaBindThunk.hpp"
 
 using namespace GarrysMod::Lua;
+
+int SetCallback(CLuaInterface& Lua)
+{
+    Lua.CheckType(1, Type::FUNCTION);
+    Lua.SetNetHookCallback(Lua.GetObject(1));
+    return 0;
+}
 
 LUA_FUNCTION(resolve)
 {
@@ -18,6 +27,10 @@ LUA_FUNCTION(resolve)
     {
         Lua.Error("[nethook] Initialization error: %s", e.what());
     }
+
+    CLuaObject nethookTable = Lua.GetNewTable();
+    nethookTable.SetMember("SetCallback", LuaStaticBindThunk<SetCallback>);
+    Lua.SetGlobal("nethook", nethookTable);
 
     return 0;
 }

@@ -1,10 +1,10 @@
+#undef GetObject
+
 #ifndef GARRYSMOD_LUA_CLUAINTERFACE_HPP
 #define GARRYSMOD_LUA_CLUAINTERFACE_HPP
 
 #include "Lua.hpp"
 #include "CLuaObject.hpp"
-
-#undef GetObject
 
 namespace GarrysMod
 {
@@ -94,6 +94,8 @@ namespace GarrysMod
             CLuaObject		GetMetaTable(int i);
 
             const CLuaObject&  GetHookCall();
+            void            SetNetHookCallback(CLuaObject& obj);
+            const CLuaObject&  GetNetHookCallback();
 
             // Functions for interacting with bound classes
             template <class T>
@@ -117,6 +119,7 @@ namespace GarrysMod
             CLuaObject		m_E;
             CLuaObject		m_errorNoHalt;
             CLuaObject		m_hookCall;
+            CLuaObject      m_netHookCallback;
         };
     }
 }

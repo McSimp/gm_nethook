@@ -13,7 +13,8 @@ CLuaInterface::CLuaInterface(lua_State* state)
     m_R(state->luabase),
     m_E(state->luabase),
     m_errorNoHalt(state->luabase),
-    m_hookCall(state->luabase)
+    m_hookCall(state->luabase),
+    m_netHookCallback(state->luabase)
 {
     // TODO: avoid a shitty constructor for CLuaObject here
 
@@ -425,4 +426,14 @@ CLuaObject CLuaInterface::GetMetaTable(int i)
 const CLuaObject& CLuaInterface::GetHookCall()
 {
     return m_hookCall;
+}
+
+void CLuaInterface::SetNetHookCallback(CLuaObject& obj)
+{
+    m_netHookCallback = obj;
+}
+
+const CLuaObject& CLuaInterface::GetNetHookCallback()
+{
+    return m_netHookCallback;
 }
