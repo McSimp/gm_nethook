@@ -109,4 +109,38 @@ namespace NetMessageManager
             registration.second.Detach();
         }
     }
+
+    bool AttachMessage(const std::string& messageName)
+    {
+        auto& messages = CNetMessageRegistration::RegisteredMessages;
+        auto it = messages.find(messageName);
+        if (it != messages.end())
+        {
+            CNetMessageRegistration& msg = it->second;
+            if (msg.IsResolved())
+            {
+                msg.Attach();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool DetachMessage(const std::string& messageName)
+    {
+        auto& messages = CNetMessageRegistration::RegisteredMessages;
+        auto it = messages.find(messageName);
+        if (it != messages.end())
+        {
+            CNetMessageRegistration& msg = it->second;
+            if (msg.IsResolved())
+            {
+                msg.Detach();
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

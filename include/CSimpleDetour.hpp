@@ -25,6 +25,9 @@ public:
 
     void Attach()
     {
+        if (m_bAttached)
+            return;
+
         DetourTransactionBegin();
         DetourUpdateThread(GetCurrentThread());
 

@@ -94,8 +94,8 @@ namespace GarrysMod
             CLuaObject		GetMetaTable(int i);
 
             const CLuaObject&  GetHookCall();
-            void            SetNetHookCallback(CLuaObject& obj);
-            const CLuaObject&  GetNetHookCallback();
+            void               SetNethookWriteCallback(CLuaObject& obj);
+            const CLuaObject&  GetNethookWriteCallback();
 
             // Functions for interacting with bound classes
             template <class T>
@@ -119,7 +119,7 @@ namespace GarrysMod
             CLuaObject		m_E;
             CLuaObject		m_errorNoHalt;
             CLuaObject		m_hookCall;
-            CLuaObject      m_netHookCallback;
+            CLuaObject      m_nethookWriteCallback;
         };
     }
 }

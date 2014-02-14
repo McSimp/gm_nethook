@@ -14,7 +14,7 @@ CLuaInterface::CLuaInterface(lua_State* state)
     m_E(state->luabase),
     m_errorNoHalt(state->luabase),
     m_hookCall(state->luabase),
-    m_netHookCallback(state->luabase)
+    m_nethookWriteCallback(state->luabase)
 {
     // TODO: avoid a shitty constructor for CLuaObject here
 
@@ -428,12 +428,12 @@ const CLuaObject& CLuaInterface::GetHookCall()
     return m_hookCall;
 }
 
-void CLuaInterface::SetNetHookCallback(CLuaObject& obj)
+void CLuaInterface::SetNethookWriteCallback(CLuaObject& obj)
 {
-    m_netHookCallback = obj;
+    m_nethookWriteCallback = obj;
 }
 
-const CLuaObject& CLuaInterface::GetNetHookCallback()
+const CLuaObject& CLuaInterface::GetNethookWriteCallback()
 {
-    return m_netHookCallback;
+    return m_nethookWriteCallback;
 }

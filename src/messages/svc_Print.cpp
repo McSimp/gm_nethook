@@ -2,44 +2,12 @@
 #include "CNetMessage.hpp"
 #include "gm/Lua.hpp"
 #include "gm/LuaBindThunk.hpp"
+#include "CHookedNetMessage.hpp"
 
 using namespace GarrysMod::Lua;
 
 class svc_Print;
 CMessageClassRegistration<svc_Print> Registration("svc_Print");
-
-template <typename T, CMessageClassRegistration<T>& R>
-class CHookedNetMessage : public CNetMessage
-{
-public:
-    bool WriteHook(bf_write& buffer)
-    {
-        for (CLuaInterface& Lua : g_StateManager.GetStates())
-        {
-            Lua.GetNetHookCallback().Push();
-            Lua.Push(R.GetMsgName().c_str());
-            Lua.PushBoundObject(static_cast<T*>(this));
-
-            // If the hook.Call succeeds
-            if (Lua.PCall(2, 1) != 0)
-                continue;
-
-            // See if we got a bool as the return value
-            if (Lua.GetType(-1) != Type::BOOL)
-            {
-                Lua.Pop();
-                continue;
-            }
-                
-            bool ignoreMessage = Lua.GetBool();
-            Lua.Pop();
-            if (ignoreMessage)
-                return true;
-        }
-
-        return R.CallOriginalWrite(this, buffer);
-    }
-};
 
 class svc_Print : public CHookedNetMessage<svc_Print, Registration>
 {
@@ -84,19 +52,15 @@ public:
 
     static void InitializeLua(CLuaInterface& Lua)
     {
-        Msg("svc_Print is being added to Lua!\n");
-        Registration.Attach();
-
-        // Setup metatable for this class
         CLuaObject mt = Lua.GetMetaTable(LuaMetaTableName, LuaTypeID);
         CLuaObject __index = Lua.GetNewTable();
         __index.SetMember("GetText", LuaMemberBindThunk<svc_Print, &svc_Print::GetTextLua>);
         __index.SetMember("SetText", LuaMemberBindThunk<svc_Print, &svc_Print::SetTextLua>);
         mt.SetMember("__index", __index);
 
-        Lua.SetGlobal("SVC_Print", LuaStaticBindThunk<&svc_Print::LuaCreateObject>);
+        //Lua.SetGlobal("svc_Print", LuaStaticBindThunk<&svc_Print::LuaCreateObject>);
     }
 };
 
-const char* svc_Print::LuaMetaTableName = "NETHOOK::SVC_Print";
+const char* svc_Print::LuaMetaTableName = "nethook.svc_Print";
 const int svc_Print::LuaTypeID = 205;

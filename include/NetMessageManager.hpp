@@ -16,6 +16,8 @@ namespace NetMessageManager
     void ResolveMessages();
     void AddMessagesToLua(GarrysMod::Lua::CLuaInterface& Lua);
     void UnhookAllMessages();
+    bool AttachMessage(const std::string& messageName);
+    bool DetachMessage(const std::string& messageName);
 }
 
 #endif

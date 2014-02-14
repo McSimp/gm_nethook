@@ -7,17 +7,39 @@
 
 using namespace GarrysMod::Lua;
 
-int SetCallback(CLuaInterface& Lua)
+int SetWriteCallback(CLuaInterface& Lua)
 {
     Lua.CheckType(1, Type::FUNCTION);
-    Lua.SetNetHookCallback(Lua.GetObject(1));
+    Lua.SetNethookWriteCallback(Lua.GetObject(1));
     return 0;
 }
 
-LUA_FUNCTION(resolve)
+int AttachMessage(CLuaInterface& Lua)
 {
-    UsesLua();
+    Lua.CheckType(1, Type::STRING);
+    
+    if (!NetMessageManager::AttachMessage(Lua.GetString(1)))
+    {
+        Lua.Error("Failed to attach to net message");
+    }
 
+    return 0;
+}
+
+int DetachMessage(CLuaInterface& Lua)
+{
+    Lua.CheckType(1, Type::STRING);
+
+    if (!NetMessageManager::DetachMessage(Lua.GetString(1)))
+    {
+        Lua.Error("Failed to detach from net message");
+    }
+
+    return 0;
+}
+
+void InitializeNethook(CLuaInterface& Lua)
+{
     try
     {
         NetMessageManager::ResolveMessages();
@@ -29,17 +51,16 @@ LUA_FUNCTION(resolve)
     }
 
     CLuaObject nethookTable = Lua.GetNewTable();
-    nethookTable.SetMember("SetCallback", LuaStaticBindThunk<SetCallback>);
+    nethookTable.SetMember("SetWriteCallback", LuaStaticBindThunk<SetWriteCallback>);
+    nethookTable.SetMember("AttachMessage", LuaStaticBindThunk<AttachMessage>);
+    nethookTable.SetMember("DetachMessage", LuaStaticBindThunk<DetachMessage>);
     Lua.SetGlobal("nethook", nethookTable);
-
-    return 0;
 }
 
 DLL_EXPORT int gmod13_open(lua_State* L)
 {
     CLuaInterface& Lua = g_StateManager.SetupState(L);
-
-    resolve(L);
+    InitializeNethook(Lua);
     Msg("[nethook] Loaded\n");
 
     return 0;
