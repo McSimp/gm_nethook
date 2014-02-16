@@ -1,45 +1,23 @@
+#pragma comment (linker, "/NODEFAULTLIB:libcmt")
+
 #include "gm/Lua.hpp"
 #include "gm/CLuaInterface.hpp"
 #include "gm/CStateManager.hpp"
 #include "gm/CLuaInterface.hpp"
 #include "NetMessageManager.hpp"
 #include "gm/LuaBindThunk.hpp"
+#include "CNetChannel.hpp"
+#include "Engine.hpp"
 
 using namespace GarrysMod::Lua;
 
-int SetWriteCallback(CLuaInterface& Lua)
-{
-    Lua.CheckType(1, Type::FUNCTION);
-    Lua.SetNethookWriteCallback(Lua.GetObject(1));
-    return 0;
-}
-
-int AttachMessage(CLuaInterface& Lua)
-{
-    Lua.CheckType(1, Type::STRING);
-    
-    if (!NetMessageManager::AttachMessage(Lua.GetString(1)))
-    {
-        Lua.Error("Failed to attach to net message");
-    }
-
-    return 0;
-}
-
-int DetachMessage(CLuaInterface& Lua)
-{
-    Lua.CheckType(1, Type::STRING);
-
-    if (!NetMessageManager::DetachMessage(Lua.GetString(1)))
-    {
-        Lua.Error("Failed to detach from net message");
-    }
-
-    return 0;
-}
-
 void InitializeNethook(CLuaInterface& Lua)
 {
+    if (Lua.IsServer())
+        Engine::InitializeServer();
+    else
+        Engine::InitializeClient();
+
     try
     {
         NetMessageManager::ResolveMessages();
@@ -51,10 +29,14 @@ void InitializeNethook(CLuaInterface& Lua)
     }
 
     CLuaObject nethookTable = Lua.GetNewTable();
-    nethookTable.SetMember("SetWriteCallback", LuaStaticBindThunk<SetWriteCallback>);
-    nethookTable.SetMember("AttachMessage", LuaStaticBindThunk<AttachMessage>);
-    nethookTable.SetMember("DetachMessage", LuaStaticBindThunk<DetachMessage>);
+    nethookTable.SetMember("SetWriteCallback", LuaStaticBindThunk<NetMessageManager::SetWriteCallbackLua>);
+    nethookTable.SetMember("AttachMessage", LuaStaticBindThunk<NetMessageManager::AttachMessageLua>);
+    nethookTable.SetMember("DetachMessage", LuaStaticBindThunk<NetMessageManager::DetachMessageLua>);
     Lua.SetGlobal("nethook", nethookTable);
+
+    // TODO: Perhaps do a similar thing as I did with the net messages, create an
+    // object which has its constructor called when the library is loaded. 
+    CNetChannel::InitializeLua(Lua);
 }
 
 DLL_EXPORT int gmod13_open(lua_State* L)

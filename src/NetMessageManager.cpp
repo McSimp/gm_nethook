@@ -110,6 +110,7 @@ namespace NetMessageManager
         }
     }
 
+    // TODO: Make this function better
     bool AttachMessage(const std::string& messageName)
     {
         auto& messages = CNetMessageRegistration::RegisteredMessages;
@@ -127,6 +128,7 @@ namespace NetMessageManager
         return false;
     }
 
+    // TODO: Make this function better
     bool DetachMessage(const std::string& messageName)
     {
         auto& messages = CNetMessageRegistration::RegisteredMessages;
@@ -142,5 +144,36 @@ namespace NetMessageManager
         }
 
         return false;
+    }
+
+    int SetWriteCallbackLua(CLuaInterface& Lua)
+    {
+        Lua.CheckType(1, Type::FUNCTION);
+        Lua.SetNethookWriteCallback(Lua.GetObject(1));
+        return 0;
+    }
+
+    int AttachMessageLua(CLuaInterface& Lua)
+    {
+        Lua.CheckType(1, Type::STRING);
+
+        if (!AttachMessage(Lua.GetString(1)))
+        {
+            Lua.Error("Failed to attach to net message");
+        }
+
+        return 0;
+    }
+
+    int DetachMessageLua(CLuaInterface& Lua)
+    {
+        Lua.CheckType(1, Type::STRING);
+
+        if (!DetachMessage(Lua.GetString(1)))
+        {
+            Lua.Error("Failed to detach from net message");
+        }
+
+        return 0;
     }
 }
