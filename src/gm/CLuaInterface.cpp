@@ -32,6 +32,8 @@ CLuaInterface::CLuaInterface(lua_State* state)
     m_errorNoHalt = GetGlobal("ErrorNoHalt");
 
     m_hookCall = GetGlobal("hook").GetMember("Call"); // TODO: Move this instead of copy
+
+    m_isServer = GetGlobal("SERVER").GetBool();
 }
 
 CLuaInterface::~CLuaInterface()
@@ -436,4 +438,14 @@ void CLuaInterface::SetNethookWriteCallback(CLuaObject& obj)
 const CLuaObject& CLuaInterface::GetNethookWriteCallback()
 {
     return m_nethookWriteCallback;
+}
+
+bool CLuaInterface::IsServer()
+{
+    return m_isServer;
+}
+
+bool CLuaInterface::IsClient()
+{
+    return !m_isServer;
 }

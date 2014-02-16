@@ -111,6 +111,9 @@ namespace GarrysMod
                 }
             }
 
+            bool IsClient();
+            bool IsServer();
+
         private:
             lua_State*		m_pState;
             ILuaBase*		m_pLua;
@@ -120,6 +123,7 @@ namespace GarrysMod
             CLuaObject		m_errorNoHalt;
             CLuaObject		m_hookCall;
             CLuaObject      m_nethookWriteCallback;
+            bool            m_isServer;
         };
     }
 }
