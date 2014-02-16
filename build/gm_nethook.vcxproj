@@ -89,10 +89,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\CHookedNetMessage.hpp" />
+    <ClInclude Include="..\include\CNetChannel.hpp" />
     <ClInclude Include="..\include\CNetMessage.hpp" />
     <ClInclude Include="..\include\CNetMessageRegistration.hpp" />
     <ClInclude Include="..\include\CSigScan.hpp" />
     <ClInclude Include="..\include\CSimpleDetour.hpp" />
+    <ClInclude Include="..\include\Engine.hpp" />
     <ClInclude Include="..\include\FuncPtr.hpp" />
     <ClInclude Include="..\include\gm\CLuaInterface.hpp" />
     <ClInclude Include="..\include\gm\CLuaObject.hpp" />
@@ -108,8 +110,10 @@
     <ClInclude Include="..\include\Util.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\CNetChannel.cpp" />
     <ClCompile Include="..\src\CNetMessageRegistration.cpp" />
     <ClCompile Include="..\src\CSigScan.cpp" />
+    <ClCompile Include="..\src\Engine.cpp" />
     <ClCompile Include="..\src\gm\CLuaInterface.cpp" />
     <ClCompile Include="..\src\gm\CLuaObject.cpp" />
     <ClCompile Include="..\src\gm\CStateManager.cpp" />

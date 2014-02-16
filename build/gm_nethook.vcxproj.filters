@@ -78,6 +78,12 @@
     <ClInclude Include="..\include\CHookedNetMessage.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\CNetChannel.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Engine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\gm\CLuaInterface.cpp">
@@ -106,6 +112,12 @@
     </ClCompile>
     <ClCompile Include="..\src\messages\svc_Print.cpp">
       <Filter>Source Files\messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CNetChannel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Engine.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
