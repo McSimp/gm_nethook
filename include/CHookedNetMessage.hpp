@@ -39,6 +39,18 @@ public:
 
         return R.CallOriginalWrite(this, buffer);
     }
+
+    static void InitializeLua(GarrysMod::Lua::CLuaInterface& Lua)
+    {
+        CLuaObject mt = Lua.GetMetaTable(T::LuaMetaTableName, T::LuaTypeID);
+        CLuaObject __index = Lua.GetNewTable();
+        T::InitializeMetaFunctions(Lua, __index);
+        mt.SetMember("__index", __index);
+
+        Lua.GetGlobal("nethook")
+           .GetMember("MessageFactory")
+           .SetMember(R.GetMsgName().c_str(), LuaStaticBindThunk<&T::LuaCreateObject>);
+    }
 };
 
 #endif

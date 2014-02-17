@@ -21,7 +21,6 @@ void InitializeNethook(CLuaInterface& Lua)
     try
     {
         NetMessageManager::ResolveMessages();
-        NetMessageManager::AddMessagesToLua(Lua);
     }
     catch (std::runtime_error e)
     {
@@ -32,11 +31,14 @@ void InitializeNethook(CLuaInterface& Lua)
     nethookTable.SetMember("SetWriteCallback", LuaStaticBindThunk<NetMessageManager::SetWriteCallbackLua>);
     nethookTable.SetMember("AttachMessage", LuaStaticBindThunk<NetMessageManager::AttachMessageLua>);
     nethookTable.SetMember("DetachMessage", LuaStaticBindThunk<NetMessageManager::DetachMessageLua>);
+    nethookTable.SetMember("MessageFactory", Lua.GetNewTable());
     Lua.SetGlobal("nethook", nethookTable);
 
     // TODO: Perhaps do a similar thing as I did with the net messages, create an
     // object which has its constructor called when the library is loaded. 
     CNetChannel::InitializeLua(Lua);
+
+    NetMessageManager::AddMessagesToLua(Lua);
 }
 
 DLL_EXPORT int gmod13_open(lua_State* L)

@@ -52,15 +52,10 @@ public:
         return 1;
     }
 
-    static void InitializeLua(CLuaInterface& Lua)
+    static void InitializeMetaFunctions(CLuaInterface& Lua, CLuaObject& mtIndex)
     {
-        CLuaObject mt = Lua.GetMetaTable(LuaMetaTableName, LuaTypeID);
-        CLuaObject __index = Lua.GetNewTable();
-        __index.SetMember("GetText", LuaMemberBindThunk<svc_Print, &svc_Print::GetTextLua>);
-        __index.SetMember("SetText", LuaMemberBindThunk<svc_Print, &svc_Print::SetTextLua>);
-        mt.SetMember("__index", __index);
-
-        Lua.SetGlobal("svc_Print", LuaStaticBindThunk<&svc_Print::LuaCreateObject>);
+        mtIndex.SetMember("GetText", LuaMemberBindThunk<svc_Print, &svc_Print::GetTextLua>);
+        mtIndex.SetMember("SetText", LuaMemberBindThunk<svc_Print, &svc_Print::SetTextLua>);
     }
 };
 
