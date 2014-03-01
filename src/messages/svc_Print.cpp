@@ -15,7 +15,6 @@ class svc_Print : public CHookedNetMessage<svc_Print, Registration>
 public:
     svc_Print() { m_bReliable = false; m_text = nullptr; };
 
-    void* m_pMessageHandler;
     const char* m_text;
     char m_textBuffer[2048];
 

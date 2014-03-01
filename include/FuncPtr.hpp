@@ -11,6 +11,8 @@ union FuncPtr {
 template<class TOut, class TIn>
 FuncPtr<TOut> MakeFuncPtr(TIn in)
 {
+    static_assert(sizeof(TIn) == 4, "FuncPtr input must be of size 4");
+
     FuncPtr<TIn> ptrIn;
     ptrIn.func = in;
 

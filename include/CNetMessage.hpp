@@ -34,6 +34,7 @@ public:
 protected:
     bool m_bReliable;
     INetChannel* m_NetChannel;
+    void* m_pMessageHandler;
 };
 
 #endif

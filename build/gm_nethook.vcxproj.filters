@@ -84,6 +84,9 @@
     <ClInclude Include="..\include\Engine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\CVirtualHook.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\gm\CLuaInterface.cpp">
@@ -118,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="..\src\Engine.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\messages\svc_GMod_ServerToClient.cpp">
+      <Filter>Source Files\messages</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

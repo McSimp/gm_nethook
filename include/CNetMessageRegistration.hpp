@@ -7,6 +7,7 @@
 #include "gm/CLuaInterface.hpp"
 #include "inetmessage.h"
 #include "FuncPtr.hpp"
+#include "CVirtualHook.hpp"
 
 typedef void (*tLuaSetupFunc) (GarrysMod::Lua::CLuaInterface& Lua);
 typedef bool (__thiscall* tMsgWriteFunc) (INetMessage* msg, bf_write& buffer);
@@ -16,6 +17,7 @@ class CNetMessageRegistration
     FuncPtr<tMsgWriteFunc> m_writeOriginalFunc;
     FuncPtr<tMsgWriteFunc> m_writeHookFunc;
     CSimpleDetour<tMsgWriteFunc> m_writeDetour;
+    //CVirtualHook<tMsgWriteFunc> dicks;
 
     FuncPtr<tLuaSetupFunc> m_luaSetupFunc;
 
