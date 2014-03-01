@@ -27,7 +27,7 @@ namespace GarrysMod
             CLuaObject		NewTemporaryObject();
             CLuaObject		NewUserData(const CLuaObject& metaT);
 
-            void			PushUserData(const CLuaObject& metatable, void * v, unsigned char type);
+            void			PushUserData(const CLuaObject& metatable, void * v, unsigned char type, bool needsGC = true);
 
             void			Error(const char* strError, ...);
             void			ErrorNoHalt(const char* strError, ...);
@@ -55,6 +55,7 @@ namespace GarrysMod
             void**			GetUserDataPtr(int i = -1);
 
             void*	        GetUserData(int i = -1);
+            UserData*       GetRawUserData(int i = -1);
             void*           CheckAndGetUserData(int i, int type);
 
             void			GetTable(int i = -1);

@@ -8,3 +8,7 @@ function PlyMeta:PrintMessage(str)
 
 	netchan:SendNetMsg(msg)
 end
+
+nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
+	print(msg)
+end)

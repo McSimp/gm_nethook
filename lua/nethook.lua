@@ -71,27 +71,27 @@ end
 -- Public API
 -- ==========
 
-function nethook.AddWriteHook(msgName, hookName, func)
+function nethook.AddOutgoingHook(msgName, hookName, func)
 	return AddInternal(msgName, WriteHooks, hookName, func)
 end
 
-function nethook.AddProcessHook(msgName, hookName, func)
+function nethook.AddIncomingHook(msgName, hookName, func)
 	return AddInternal(msgName, ProcessHooks, hookName, func)
 end
 
-function nethook.RemoveWriteHook(msgName, hookName)
+function nethook.RemoveOutgoingHook(msgName, hookName)
 	return RemoveInternal(msgName, WriteHooks, hookName)
 end
 
-function nethook.RemoveProcessHook(msgName, hookName)
+function nethook.RemoveIncomingHook(msgName, hookName)
 	return RemoveInternal(msgName, ProcessHooks, hookName)
 end
 
-function nethook.GetWriteHooks()
+function nethook.GetOutgoingHooks()
 	return WriteHooks
 end
 
-function nethook.GetProcessHooks()
+function nethook.GetIncomingHooks()
 	return ProcessHooks
 end
 

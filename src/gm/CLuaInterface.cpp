@@ -90,11 +90,12 @@ CLuaObject CLuaInterface::NewUserData(const CLuaObject& metaT)
     return obj;
 }
 
-void CLuaInterface::PushUserData(const CLuaObject& metaT, void* v, unsigned char type)
+void CLuaInterface::PushUserData(const CLuaObject& metaT, void* v, unsigned char type, bool needsGC)
 {
     UserData* data = (UserData*)m_pLua->NewUserdata(sizeof(UserData));
     data->data = v;
     data->type = type;
+    data->needsGC = needsGC;
 
     int iRef = m_pLua->ReferenceCreate();
 
@@ -271,6 +272,11 @@ void* CLuaInterface::GetUserData(int i)
 {
     UserData* data = (UserData*)m_pLua->GetUserdata(i);
     return data->data;
+}
+
+UserData* CLuaInterface::GetRawUserData(int i)
+{
+    return (UserData*)m_pLua->GetUserdata(i);
 }
 
 void* CLuaInterface::CheckAndGetUserData(int i, int type)
