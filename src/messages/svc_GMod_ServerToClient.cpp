@@ -3,6 +3,7 @@
 #include "gm/Lua.hpp"
 #include "gm/LuaBindThunk.hpp"
 #include "CHookedNetMessage.hpp"
+#include "lua_bf_read.hpp"
 
 using namespace GarrysMod::Lua;
 
@@ -29,9 +30,17 @@ public:
         return 1;
     }
 
+    int GetDataLua(CLuaInterface& Lua)
+    {
+        lua_bf_read* reader = new lua_bf_read(m_write);
+        Lua.PushBoundObject(reader);
+
+        return 1;
+    }
+
     static void InitializeMetaFunctions(CLuaInterface& Lua, CLuaObject& mtIndex)
     {
-        //mtIndex.SetMember("GetText", LuaMemberBindThunk<svc_Print, &svc_Print::GetTextLua>);
+        mtIndex.SetMember("GetData", LuaMemberBindThunk<svc_GMod_ServerToClient, &GetDataLua>);
     }
 };
 

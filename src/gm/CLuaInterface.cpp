@@ -381,6 +381,11 @@ void CLuaInterface::Push(int i)
     m_pLua->PushNumber(i);
 }
 
+void CLuaInterface::Push(unsigned int i)
+{
+    m_pLua->PushNumber(static_cast<double>(i));
+}
+
 void CLuaInterface::Push(float f)
 {
     m_pLua->PushNumber(f);

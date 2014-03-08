@@ -11,4 +11,6 @@ end
 
 nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 	print(msg)
+	local data = msg:GetData()
+	PrintTable(getmetatable(data))
 end)

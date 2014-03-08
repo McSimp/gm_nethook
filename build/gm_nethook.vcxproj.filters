@@ -87,6 +87,9 @@
     <ClInclude Include="..\include\CVirtualHook.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\lua_bf_read.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\gm\CLuaInterface.cpp">
@@ -124,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="..\src\messages\svc_GMod_ServerToClient.cpp">
       <Filter>Source Files\messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lua_bf_read.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

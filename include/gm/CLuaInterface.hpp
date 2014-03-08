@@ -79,6 +79,7 @@ namespace GarrysMod
             void			Push(bool b);
             void			Push(CFunc f);
             void			Push(int i);
+            void            Push(unsigned int i);
             void			Push(float f);
             void			PushLong(int i);
             void			PushNil();

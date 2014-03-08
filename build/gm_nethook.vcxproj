@@ -105,12 +105,14 @@
     <ClInclude Include="..\include\gm\LuaBindThunk.hpp" />
     <ClInclude Include="..\include\gm\Types.hpp" />
     <ClInclude Include="..\include\gm\UserData.hpp" />
+    <ClInclude Include="..\include\lua_bf_read.hpp" />
     <ClInclude Include="..\include\MemorySignature.hpp" />
     <ClInclude Include="..\include\NetMessageManager.hpp" />
     <ClInclude Include="..\include\Signatures.hpp" />
     <ClInclude Include="..\include\Util.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\lua_bf_read.cpp" />
     <ClCompile Include="..\src\CNetChannel.cpp" />
     <ClCompile Include="..\src\CNetMessageRegistration.cpp" />
     <ClCompile Include="..\src\CSigScan.cpp" />
