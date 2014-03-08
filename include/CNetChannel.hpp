@@ -12,7 +12,7 @@ public:
 
     int SendNetMsgLua(GarrysMod::Lua::CLuaInterface& Lua);
 
-    static void InitializeLua(GarrysMod::Lua::CLuaInterface& Lua);
+    static void InitializeMetaFunctions(GarrysMod::Lua::CLuaInterface& Lua, GarrysMod::Lua::CLuaObject& mtIndex);
     static int GetPlayerNetChannelLua(GarrysMod::Lua::CLuaInterface& Lua);
 };
 

@@ -39,17 +39,14 @@ int CNetChannel::GetPlayerNetChannelLua(CLuaInterface& Lua)
     int index = Lua.GetInteger(-1);
 
     CNetChannel* nc = static_cast<CNetChannel*>(Engine::Server->GetPlayerNetInfo(index));
-    Lua.PushBoundObject(nc);
+    Lua.PushBoundObject(nc, false);
 
     return 1;
 }
 
-void CNetChannel::InitializeLua(CLuaInterface& Lua)
+void CNetChannel::InitializeMetaFunctions(CLuaInterface& Lua, CLuaObject& mtIndex)
 {
-    CLuaObject mt = Lua.GetMetaTable(LuaMetaTableName, LuaTypeID);
-    CLuaObject __index = Lua.GetNewTable();
-    __index.SetMember("SendNetMsg", LuaMemberBindThunk<CNetChannel, &CNetChannel::SendNetMsgLua>);
-    mt.SetMember("__index", __index);
+    mtIndex.SetMember("SendNetMsg", LuaMemberBindThunk<CNetChannel, &CNetChannel::SendNetMsgLua>);
 
     if (Lua.IsServer())
     {

@@ -1,5 +1,4 @@
 #include "CLuaInterface.hpp"
-#include "UserData.hpp"
 
 #include <iostream>
 #include <stdarg.h>
@@ -288,6 +287,16 @@ void* CLuaInterface::CheckAndGetUserData(int i, int type)
 
     UserData* data = (UserData*)m_pLua->GetUserdata(i);
     return data->data;
+}
+
+UserData* CLuaInterface::CheckAndGetRawUserData(int i, int type)
+{
+    if (m_pLua->GetType(1) != type)
+    {
+        m_pLua->ArgError(i, "invalid userdata type");
+    }
+
+    return (UserData*)m_pLua->GetUserdata(i);
 }
 
 void CLuaInterface::GetTable(int i) // ???

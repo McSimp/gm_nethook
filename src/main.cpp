@@ -35,8 +35,8 @@ void InitializeNethook(CLuaInterface& Lua)
     Lua.SetGlobal("nethook", nethookTable);
 
     // TODO: Perhaps do a similar thing as I did with the net messages, create an
-    // object which has its constructor called when the library is loaded. 
-    CNetChannel::InitializeLua(Lua);
+    // object which has its constructor called when the library is loaded.
+    Lua.InitializeClass<CNetChannel>();
 
     NetMessageManager::AddMessagesToLua(Lua);
 }

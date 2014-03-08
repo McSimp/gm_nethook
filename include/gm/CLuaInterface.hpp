@@ -3,8 +3,8 @@
 #ifndef GARRYSMOD_LUA_CLUAINTERFACE_HPP
 #define GARRYSMOD_LUA_CLUAINTERFACE_HPP
 
-#include "Lua.hpp"
 #include "CLuaObject.hpp"
+#include "Lua.hpp"
 
 namespace GarrysMod
 {
@@ -57,6 +57,7 @@ namespace GarrysMod
             void*	        GetUserData(int i = -1);
             UserData*       GetRawUserData(int i = -1);
             void*           CheckAndGetUserData(int i, int type);
+            UserData*       CheckAndGetRawUserData(int i, int type);
 
             void			GetTable(int i = -1);
             const char*		GetStringOrError(int i);
@@ -100,7 +101,8 @@ namespace GarrysMod
 
             // Functions for interacting with bound classes
             template <class T>
-            void PushBoundObject(T* obj) {
+            void PushBoundObject(T* obj, bool needsGC = true)
+            {
                 if (obj == nullptr)
                 {
                     PushNil();
@@ -108,8 +110,35 @@ namespace GarrysMod
                 else
                 {
                     CLuaObject mt = GetMetaTable(T::LuaMetaTableName, T::LuaTypeID);
-                    PushUserData(mt, obj, T::LuaTypeID);
+                    PushUserData(mt, obj, T::LuaTypeID, needsGC);
                 }
+            }
+
+            template <class T>
+            static int UserDataGC(CLuaInterface& Lua) // TODO: Passing CLuaInterface is smelly
+            {
+                UserData* ud = Lua.CheckAndGetRawUserData(1, T::LuaTypeID);
+
+                printf("GC: type = %s, needsGC = %d\n", T::LuaMetaTableName, ud->needsGC);
+
+                if (ud->needsGC)
+                {
+                    T* obj = static_cast<T*>(ud->data);
+                    delete obj;
+                    ud->data = nullptr;
+                }
+
+                return 0;
+            }
+
+            template <class T>
+            void InitializeClass()
+            {
+                CLuaObject mt = GetMetaTable(T::LuaMetaTableName, T::LuaTypeID);
+                CLuaObject __index = GetNewTable();
+                T::InitializeMetaFunctions(*this, __index);
+                mt.SetMember("__index", __index);
+                mt.SetMember("__gc", LuaStaticBindThunk<UserDataGC<T>>);
             }
 
             bool IsClient();

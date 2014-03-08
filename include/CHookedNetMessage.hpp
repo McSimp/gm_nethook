@@ -18,7 +18,7 @@ public:
 
             writeCB.Push();
             Lua.Push(R.GetMsgName().c_str());
-            Lua.PushBoundObject(static_cast<T*>(this));
+            Lua.PushBoundObject(static_cast<T*>(this), false);
 
             // If the hook.Call succeeds
             if (Lua.PCall(2, 1) != 0)
@@ -42,10 +42,7 @@ public:
 
     static void InitializeLua(GarrysMod::Lua::CLuaInterface& Lua)
     {
-        CLuaObject mt = Lua.GetMetaTable(T::LuaMetaTableName, T::LuaTypeID);
-        CLuaObject __index = Lua.GetNewTable();
-        T::InitializeMetaFunctions(Lua, __index);
-        mt.SetMember("__index", __index);
+        Lua.InitializeClass<T>();
 
         Lua.GetGlobal("nethook")
            .GetMember("MessageFactory")
