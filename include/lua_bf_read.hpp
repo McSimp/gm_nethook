@@ -10,7 +10,9 @@ public:
     static const char* LuaMetaTableName;
     static const int LuaTypeID;
 
-    lua_bf_read(const bf_write& write);
+    lua_bf_read(const bf_write& write) : lua_bf_read(write.GetData(), write.m_nDataBytes) {};
+    lua_bf_read(const bf_write& write, int numBits) : lua_bf_read(write.GetData(), (numBits + 7) / 8) {};
+    lua_bf_read(const unsigned char* oldBuf, int writeSize);
     ~lua_bf_read();
 
     int LuaReset(GarrysMod::Lua::CLuaInterface& Lua);

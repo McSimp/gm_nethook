@@ -32,7 +32,7 @@ public:
 
     int GetDataLua(CLuaInterface& Lua)
     {
-        lua_bf_read* reader = new lua_bf_read(m_write);
+        lua_bf_read* reader = new lua_bf_read(m_write, m_numBits);
         Lua.PushBoundObject(reader);
 
         return 1;

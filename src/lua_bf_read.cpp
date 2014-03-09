@@ -3,13 +3,11 @@
 
 using namespace GarrysMod::Lua;
 
-lua_bf_read::lua_bf_read(const bf_write& write)
+lua_bf_read::lua_bf_read(const unsigned char* oldBuf, int writeSize)
 {
-    int writeSize = write.GetNumBytesWritten();
     unsigned char* buf = new unsigned char[writeSize];
-    memcpy(buf, write.GetData(), writeSize);
-
-    this->StartReading(buf, writeSize);
+    memcpy(buf, oldBuf, writeSize);
+    StartReading(buf, writeSize);
 }
 
 lua_bf_read::~lua_bf_read()
@@ -148,8 +146,11 @@ int lua_bf_read::LuaReadBytes(CLuaInterface& Lua)
     {
         Lua.Error("Cannot read %d bytes, maximum is %d", numBytes, sizeof(buf));
     }
-
-    if (!ReadBytes(buf, numBytes))
+    else if (numBytes <= 0)
+    {
+        Lua.Push("");
+    } 
+    else if (!ReadBytes(buf, numBytes))
     {
         Lua.Error("Failed to read bytes");
     }

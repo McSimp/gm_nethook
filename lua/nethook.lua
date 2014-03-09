@@ -42,9 +42,8 @@ end
 local function CallInternal(msgName, hookTable, msg)
 	local hooks = hookTable[msgName]
 	if hooks ~= nil then
-		local ret
 		for k,v in pairs(hooks) do 
-			ret = v(msg)
+			local ret = v(msg)
 
 			-- If we explicitly return a value from our hook, stop the rest of
 			-- the hooks from executing and pass the value back into the module.

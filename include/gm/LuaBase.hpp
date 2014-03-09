@@ -90,6 +90,22 @@ namespace GarrysMod
 
 				virtual double			ObjLen( int iStackPos = -1 ) = 0;
 
+                virtual void Unknown1() = 0;
+                virtual void Unknown2() = 0;
+                virtual void Unknown3() = 0;
+                virtual void Unknown4() = 0;
+                virtual void Unknown5() = 0;
+                virtual void Unknown6() = 0;
+                virtual void Unknown7() = 0;
+                virtual void Unknown8() = 0;
+                virtual void Unknown9() = 0;
+                virtual void Unknown10() = 0;
+                virtual void Unknown11() = 0;
+                virtual void Unknown12() = 0;
+                virtual void Unknown13() = 0;
+                virtual bool CallInternal(int numArgs, int numReturns) = 0;
+                virtual void Unknown15() = 0;
+                virtual bool CallInternalGetBool(int numArgs) = 0;
 		};
 
 		enum 

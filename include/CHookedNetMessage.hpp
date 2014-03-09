@@ -20,21 +20,14 @@ public:
             Lua.Push(R.GetMsgName().c_str());
             Lua.PushBoundObject(static_cast<T*>(this), false);
 
-            // If the hook.Call succeeds
-            if (Lua.PCall(2, 1) != 0)
-                continue;
-
-            // See if we got a bool as the return value
-            if (Lua.GetType(-1) != Type::BOOL)
-            {
-                Lua.Pop();
-                continue;
-            }
-
-            bool ignoreMessage = Lua.GetBool();
-            Lua.Pop();
+            bool ignoreMessage = Lua.GetLuaState()->luabase->CallInternalGetBool(2);
             if (ignoreMessage)
+            {
+#ifdef _DEBUG
+                Msg("[nethook] Skipping message %s\n", R.GetMsgName().c_str());
+#endif
                 return true;
+            }
         }
 
         return R.CallOriginalWrite(this, buffer);
