@@ -9,10 +9,7 @@ CLuaObject::CLuaObject(ILuaBase* lua) : m_pLua(lua), m_iRef(LUA_REFNIL)
     printf("[WARN] CLuaObject default constructor called\n");
 }
 
-CLuaObject::CLuaObject(ILuaBase* lua, int iRef) : m_pLua(lua), m_iRef(iRef)
-{
-    printf("[WARN] CLuaObject ref constructor called\n");
-}
+CLuaObject::CLuaObject(ILuaBase* lua, int iRef) : m_pLua(lua), m_iRef(iRef) {}
 
 CLuaObject::CLuaObject(CLuaObject&& old) : m_pLua(old.m_pLua), m_iRef(old.m_iRef)
 {
@@ -70,8 +67,6 @@ CLuaObject& CLuaObject::operator=(CLuaObject&& old)
 
 CLuaObject::~CLuaObject()
 {
-    printf("[WARN] CLuaObject destructor called\n");
-
     m_pLua->ReferenceFree(m_iRef);
 }
 

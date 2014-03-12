@@ -9,19 +9,32 @@ function PlyMeta:PrintMessage(str)
 	netchan:SendNetMsg(msg)
 end
 
+local function HandleLuaFileDownload(data)
+	print(string.format("File Number = %d, CRC = %d", data:ReadWord(), data:ReadLong()))
+	file.Append("file.txt", util.Decompress(data:ReadBytes(data:GetNumBytesLeft())))
+end
+
 nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 	local data = msg:GetData()
-	print(data:GetNumBytesLeft())
 	if data:GetNumBytesLeft() > 0 then
-		print(data:ReadByte())
-		hex_dump(data:ReadBytes(data:GetNumBytesLeft()))
+		local msgType = data:ReadByte()
+		if msgType == 4 then
+			HandleLuaFileDownload(data)
+		elseif msgType == 0 then
+			if data:ReadWord() == util.NetworkStringToID("pingas") then
+				print(data:ReadString())
+			end
+		else
+			print(msgType)
+			hex_dump(data:ReadBytes(data:GetNumBytesLeft()))
+		end
 	end
 end)
 
 util.AddNetworkString("pingas")
 
 function TestMessage()
-	net.Start("pingas") for i=1,100 do net.WriteString("pingas") end net.Broadcast()
+	net.Start("pingas") for i=1,10 do net.WriteString("pingas") end net.Broadcast()
 end
 
 function hex_dump(buf)

@@ -116,20 +116,21 @@ int lua_bf_read::LuaReadLong(CLuaInterface& Lua)
 int lua_bf_read::LuaReadString(CLuaInterface& Lua)
 {
     static char strBuf[102400];
-    int remaining = 0;
+    int length = 0;
     
-    if (!ReadString(strBuf, sizeof(strBuf), false, &remaining))
+    if (!ReadString(strBuf, sizeof(strBuf), false, &length))
     {
         Lua.Error("The requested string was too large to read");
     }
     else
     {
-        if (strlen(strBuf) != (sizeof(strBuf)-remaining - 1))
+#ifdef _DEBUG
+        if (strlen(strBuf) != length)
         {
-            Lua.Error("Sizes do not match: %d %d", strlen(strBuf), (sizeof(strBuf)-remaining - 1));
+            Lua.Error("Sizes do not match: %d %d", strlen(strBuf), length);
         }
-
-        Lua.Push(strBuf, sizeof(strBuf) - remaining - 1);
+#endif
+        Lua.Push(strBuf, length);
     }
 
     return 1;
