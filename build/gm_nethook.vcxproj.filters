@@ -131,5 +131,8 @@
     <ClCompile Include="..\src\lua_bf_read.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\messages\svc_ServerInfo.cpp">
+      <Filter>Source Files\messages</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
