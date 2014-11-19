@@ -91,6 +91,7 @@ namespace GarrysMod
             CLuaObject		GetReturnObject(int iNum);
 
             void			Call(int args, int returns = 0);
+            bool            CallGetBool(int args);
             int				PCall(int args, int returns = 0, int iErrorFunc = 0);
 
             CLuaObject		GetMetaTable(const char* strName, int iType);
@@ -120,7 +121,7 @@ namespace GarrysMod
             {
                 UserData* ud = Lua.CheckAndGetRawUserData(1, T::LuaTypeID);
 
-                printf("GC: type = %s, needsGC = %d\n", T::LuaMetaTableName, ud->needsGC);
+                //printf("GC: type = %s, needsGC = %d\n", T::LuaMetaTableName, ud->needsGC);
 
                 if (ud->needsGC)
                 {
@@ -151,10 +152,8 @@ namespace GarrysMod
             CLuaObject		m_G;
             CLuaObject		m_R;
             CLuaObject		m_E;
-            CLuaObject		m_errorNoHalt;
             CLuaObject		m_hookCall;
             CLuaObject      m_nethookWriteCallback;
-            bool            m_isServer;
         };
     }
 }

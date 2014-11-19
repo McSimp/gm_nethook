@@ -88,7 +88,9 @@ namespace NetMessageManager
         for (const auto& registration : messages)
         {
             if (!registration.second.IsResolved())
+            {
                 throw NetMessageResolverException(Util::Format("Failed to find net message: %s", registration.first.c_str()));
+            }
         }
     }
 

@@ -10,10 +10,16 @@ function PlyMeta:PrintMessage(str)
 end
 
 local function HandleLuaFileDownload(data)
-	print(string.format("File Number = %d, CRC = %d", data:ReadWord(), data:ReadLong()))
-	file.Append("file.txt", util.Decompress(data:ReadBytes(data:GetNumBytesLeft())))
+	if true then
+		hex_dump(data:ReadBytes(data:GetNumBytesLeft()))
+		return
+	end
+
+	local info = string.format("File Number = %d, CRC = %d\n", data:ReadWord(), data:ReadLong())
+	print(info)
+	file.Append("file.txt", info .. util.Decompress(data:ReadBytes(data:GetNumBytesLeft())))
 end
---[[
+
 nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 	local data = msg:GetData()
 	if data:GetNumBytesLeft() > 0 then
@@ -22,7 +28,7 @@ nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 			HandleLuaFileDownload(data)
 		elseif msgType == 0 then
 			if data:ReadWord() == util.NetworkStringToID("pingas") then
-				print(data:ReadString())
+				file.Write("file.txt", data:ReadBytes(data:GetNumBytesLeft()))
 			end
 		else
 			print(msgType)
@@ -31,18 +37,64 @@ nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 	end
 end)
 
-util.AddNetworkString("pingas")
+function PlyMeta:TestFile()
+	local netchan = self:GetNetChannel()
 
-function TestMessage()
-	net.Start("pingas") for i=1,10 do net.WriteString("pingas") end net.Broadcast()
+	local f = file.Open("spoofedfile.txt", "rb", "DATA")
+	local filedata = f:Read(f:Size())
+	local writer = nethook.bf_write(f:Size() + 500)
+	writer:WriteByte(1)
+	writer:WriteString("!RELOAD")
+	writer:WriteString("lua/includes/extensions/client/entity.lua")
+	writer:WriteString("lua/includes/extensions/client/entity.lua")
+	writer:WriteUBitLong(4 + f:Size(), 32)
+	writer:WriteUBitLong(821089979, 32)
+	writer:WriteBytes(filedata, f:Size())
+
+	local msg = nethook.NewMessage("svc_GMod_ServerToClient")
+	msg:SetData(writer)
+	netchan:SendNetMsg(msg)
 end
 
-]]
+function PlyMeta:TestFile2()
+	local netchan = self:GetNetChannel()
 
+	local f = file.Open("spoofedfile.txt", "rb", "DATA")
+	local filedata = f:Read(f:Size())
+	local writer = nethook.bf_write(f:Size() + 100)
+	writer:WriteByte(4)
+	writer:WriteShort(157)
+	writer:WriteUBitLong(821089979, 32)
+	writer:WriteBytes(filedata, f:Size())
+
+	local msg = nethook.NewMessage("svc_GMod_ServerToClient")
+	msg:SetData(writer)
+	netchan:SendNetMsg(msg)
+end
+
+
+function lel()
+	local data = file.Read("spoofedfile.txt")
+	print(hex_dump(data))
+end
+
+util.AddNetworkString("pingas")
+util.AddNetworkString("pingascl")
+
+function TestMessage()
+	net.Start("pingas") net.WriteData("abc", 65500) net.Broadcast()
+end
+
+net.Receive("pingascl", function()
+	file.Write("file.txt", net.ReadData(65500))
+end)
+
+--[[
 nethook.AddOutgoingHook("svc_ServerInfo", "TestOutput", function(msg)
 	hex_dump(msg:GetMapMD5())
 	msg:SetMapMD5("\x1D\x34\xB6\x5A\x53\xC9\x42\xDC\x55\xD5\x1A\xE3\x68\xBE\xE7\x4A")
 end)
+]]
 
 function hex_dump(buf)
 	for byte=1, #buf, 16 do

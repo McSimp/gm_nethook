@@ -17,7 +17,6 @@ class CNetMessageRegistration
     FuncPtr<tMsgWriteFunc> m_writeOriginalFunc;
     FuncPtr<tMsgWriteFunc> m_writeHookFunc;
     CSimpleDetour<tMsgWriteFunc> m_writeDetour;
-    //CVirtualHook<tMsgWriteFunc> dicks;
 
     FuncPtr<tLuaSetupFunc> m_luaSetupFunc;
 
@@ -53,7 +52,9 @@ public:
     T* CreateNewMessage()
     {
         if (!IsResolved())
+        {
             return nullptr;
+        }
 
         T* obj = new T();
 

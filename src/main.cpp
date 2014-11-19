@@ -9,15 +9,20 @@
 #include "CNetChannel.hpp"
 #include "Engine.hpp"
 #include "lua_bf_read.hpp"
+#include "lua_bf_write.hpp"
 
 using namespace GarrysMod::Lua;
 
 void InitializeNethook(CLuaInterface& Lua)
 {
     if (Lua.IsServer())
+    {
         Engine::InitializeServer();
+    } 
     else
+    {
         Engine::InitializeClient();
+    }
 
     try
     {
@@ -39,6 +44,7 @@ void InitializeNethook(CLuaInterface& Lua)
     // object which has its constructor called when the library is loaded.
     Lua.InitializeClass<CNetChannel>();
     Lua.InitializeClass<lua_bf_read>();
+    Lua.InitializeClass<lua_bf_write>();
 
     NetMessageManager::AddMessagesToLua(Lua);
 }

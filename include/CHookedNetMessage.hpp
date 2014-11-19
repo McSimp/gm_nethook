@@ -20,7 +20,7 @@ public:
             Lua.Push(R.GetMsgName().c_str());
             Lua.PushBoundObject(static_cast<T*>(this), false);
 
-            bool ignoreMessage = Lua.GetLuaState()->luabase->CallInternalGetBool(2);
+            bool ignoreMessage = Lua.CallGetBool(2);
             if (ignoreMessage)
             {
 #ifdef _DEBUG

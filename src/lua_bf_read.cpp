@@ -8,6 +8,7 @@ lua_bf_read::lua_bf_read(const unsigned char* oldBuf, int writeSize)
     unsigned char* buf = new unsigned char[writeSize];
     memcpy(buf, oldBuf, writeSize);
     StartReading(buf, writeSize);
+    Assert(m_pData == buf);
 }
 
 lua_bf_read::~lua_bf_read()

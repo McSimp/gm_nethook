@@ -43,6 +43,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\obj\$(Configuration)\</IntDir>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -58,6 +59,7 @@
       <PreprocessorDefinitions>GMMODULE;WIN32;_DEBUG;_WINDOWS;_USRDLL;GM_NETHOOK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\include;..\include\gm;..\thirdparty\include;$(SOURCE_SDK_2013)\common;$(SOURCE_SDK_2013)\public;$(SOURCE_SDK_2013)\public\tier0;$(SOURCE_SDK_2013)\public\tier1;$(SOURCE_SDK_2013)\public\mathlib;$(SOURCE_SDK_2013)\public\engine;$(SOURCE_SDK_2013)\game\shared;$(SOURCE_SDK_2013)\game\client;$(SOURCE_SDK_2013)\game\server;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -106,6 +108,7 @@
     <ClInclude Include="..\include\gm\Types.hpp" />
     <ClInclude Include="..\include\gm\UserData.hpp" />
     <ClInclude Include="..\include\lua_bf_read.hpp" />
+    <ClInclude Include="..\include\lua_bf_write.hpp" />
     <ClInclude Include="..\include\MemorySignature.hpp" />
     <ClInclude Include="..\include\NetMessageManager.hpp" />
     <ClInclude Include="..\include\Signatures.hpp" />
@@ -120,6 +123,7 @@
     <ClCompile Include="..\src\gm\CLuaInterface.cpp" />
     <ClCompile Include="..\src\gm\CLuaObject.cpp" />
     <ClCompile Include="..\src\gm\CStateManager.cpp" />
+    <ClCompile Include="..\src\lua_bf_write.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\messages\svc_GMod_ServerToClient.cpp" />
     <ClCompile Include="..\src\messages\svc_Print.cpp" />

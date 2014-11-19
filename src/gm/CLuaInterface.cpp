@@ -11,7 +11,6 @@ CLuaInterface::CLuaInterface(lua_State* state)
     m_G(state->luabase),
     m_R(state->luabase),
     m_E(state->luabase),
-    m_errorNoHalt(state->luabase),
     m_hookCall(state->luabase),
     m_nethookWriteCallback(state->luabase)
 {
@@ -28,11 +27,7 @@ CLuaInterface::CLuaInterface(lua_State* state)
     m_pLua->PushSpecial(SPECIAL_ENV);
     CLuaObject m_E(m_pLua, m_pLua->ReferenceCreate());
 
-    m_errorNoHalt = GetGlobal("ErrorNoHalt");
-
     m_hookCall = GetGlobal("hook").GetMember("Call"); // TODO: Move this instead of copy
-
-    m_isServer = GetGlobal("SERVER").GetBool();
 }
 
 CLuaInterface::~CLuaInterface()
@@ -122,19 +117,10 @@ void CLuaInterface::Error(const char* strError, ...)
 
 void CLuaInterface::ErrorNoHalt(const char* strError, ...)
 {
-    char buff[1024];
-    va_list argptr;
-    va_start(argptr, strError);
-#ifdef _LINUX
-    vsprintf(buff, strError, argptr);
-#else
-    vsprintf_s(buff, strError, argptr);
-#endif
-    va_end(argptr);
-
-    m_errorNoHalt.Push();
-    m_pLua->PushString(strError);
-    m_pLua->Call(1, 0);
+    va_list args;
+    va_start(args, strError);
+    m_pLua->ErrorNoHalt(strError, args);
+    va_end(args);
 }
 
 void CLuaInterface::LuaError(const char* strError, int argument)
@@ -216,11 +202,7 @@ void CLuaInterface::RemoveGlobal(const char* name)
 
 void CLuaInterface::NewGlobalTable(const char* name)
 {
-    m_pLua->PushSpecial(SPECIAL_GLOB); // +1
-    m_pLua->PushString(name); // +1
-    m_pLua->CreateTable();
-    m_pLua->SetTable(-3); // -2
-    m_pLua->Pop(); // -1
+    m_pLua->NewGlobalTable(name);
 }
 
 CLuaObject CLuaInterface::GetObject(int i)
@@ -280,7 +262,7 @@ UserData* CLuaInterface::GetRawUserData(int i)
 
 void* CLuaInterface::CheckAndGetUserData(int i, int type)
 {
-    if (m_pLua->GetType(1) != type)
+    if (m_pLua->GetType(i) != type)
     {
         m_pLua->ArgError(i, "invalid userdata type");
     }
@@ -306,8 +288,7 @@ void CLuaInterface::GetTable(int i) // ???
 
 const char* CLuaInterface::GetStringOrError(int i)
 {
-    m_pLua->CheckType(i, Type::STRING);
-    return m_pLua->GetString(i);
+    return m_pLua->GetStringOrError(i);
 }
 
 int CLuaInterface::GetReference(int i)
@@ -423,7 +404,12 @@ CLuaObject CLuaInterface::GetReturnObject(int iNum)
 
 void CLuaInterface::Call(int args, int returns)
 {
-    m_pLua->Call(args, returns);
+    m_pLua->CallInternal(args, returns);
+}
+
+bool CLuaInterface::CallGetBool(int args)
+{
+    return m_pLua->CallInternalGetBool(args);
 }
 
 int CLuaInterface::PCall(int args, int returns, int iErrorFunc)
@@ -462,10 +448,10 @@ const CLuaObject& CLuaInterface::GetNethookWriteCallback()
 
 bool CLuaInterface::IsServer()
 {
-    return m_isServer;
+    return m_pLua->IsServer();
 }
 
 bool CLuaInterface::IsClient()
 {
-    return !m_isServer;
+    return m_pLua->IsClient();
 }
