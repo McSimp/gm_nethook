@@ -95,14 +95,24 @@ public:
 
     int GetOSLua(CLuaInterface& Lua)
     {
-        Lua.Push(m_cOS);
+        Lua.Push(&m_cOS, 1);
         return 1;
     }
 
     int SetOSLua(CLuaInterface& Lua)
     {
-        Lua.CheckType(2, Type::NUMBER);
-        m_cOS = Lua.GetInteger(2);
+        Lua.CheckType(2, Type::STRING);
+
+        unsigned int len = 0;
+        const char* newOS = Lua.GetString(2, &len);
+
+        if (len != 1)
+        {
+            Lua.LuaError("OS must be 1 character", 2);
+        }
+
+        m_cOS = newOS[0];
+
         return 0;
     }
 

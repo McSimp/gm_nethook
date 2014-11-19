@@ -20,6 +20,53 @@ local function HandleLuaFileDownload(data)
 	file.Append("file.txt", info .. util.Decompress(data:ReadBytes(data:GetNumBytesLeft())))
 end
 
+local serverInfoFormat = [[
+svc_ServerInfo:
+Protocol: %d
+Server Count: %d
+Is Dedicated: %s
+Is HLTV: %s
+OS: %s
+Client CRC: %d
+Map MD5: %s
+Max Clients: %d
+Max Classes: %d
+Player Slot: %d
+Tick Interval: %f
+Game Dir: %s
+Map Name: %s
+Sky Name: %s
+Host Name: %s
+Loading URL: %s
+Gamemode: %s
+]]
+
+nethook.AddOutgoingHook("svc_ServerInfo", "TestServerInfo", function(msg)
+	print(string.format(serverInfoFormat, 
+		msg:GetProtocol(),
+		msg:GetServerCount(),
+		tostring(msg:GetIsDedicated()),
+		tostring(msg:GetIsHLTV()),
+		msg:GetOS(),
+		msg:GetClientCRC(),
+		msg:GetMapMD5(),
+		msg:GetMaxClients(),
+		msg:GetMaxClasses(),
+		msg:GetPlayerSlot(),
+		msg:GetTickInterval(),
+		msg:GetGameDir(),
+		msg:GetMapName(),
+		msg:GetSkyName(),
+		msg:GetHostName(),
+		msg:GetLoadingURL(),
+		msg:GetGamemode()
+	))
+
+	msg:SetOS('l')
+	msg:SetLoadingURL("http://steamcommunity.com")
+end)
+
+--[[
 nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 	local data = msg:GetData()
 	if data:GetNumBytesLeft() > 0 then
@@ -36,7 +83,7 @@ nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 		end
 	end
 end)
-
+]]
 function PlyMeta:TestFile()
 	local netchan = self:GetNetChannel()
 
