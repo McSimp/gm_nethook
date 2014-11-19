@@ -8,10 +8,7 @@
 
 using namespace GarrysMod::Lua;
 
-class svc_GMod_ServerToClient;
-CMessageClassRegistration<svc_GMod_ServerToClient> Registration("svc_GMod_ServerToClient");
-
-class svc_GMod_ServerToClient : public CHookedNetMessage<svc_GMod_ServerToClient, Registration>
+IMPLEMENT_MESSAGE(svc_GMod_ServerToClient)
 {
 public:
     svc_GMod_ServerToClient() { m_bReliable = true; };
@@ -25,7 +22,7 @@ public:
 
     static int LuaCreateObject(CLuaInterface& Lua)
     {
-        svc_GMod_ServerToClient* obj = Registration.CreateNewMessage();
+        svc_GMod_ServerToClient* obj = MSG_REGISTRATION(svc_GMod_ServerToClient).CreateNewMessage();
         Lua.PushBoundObject(obj); // TODO: THIS DOES ACTUALLY NEED TO BE FREED
         return 1;
     }

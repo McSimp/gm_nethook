@@ -4,6 +4,13 @@
 #include "gm/CStateManager.hpp"
 #include "gm/CLuaInterface.hpp"
 
+#define MSG_REGISTRATION(name) MsgRegistration##name
+
+#define IMPLEMENT_MESSAGE(name) \
+    class name; \
+    CMessageClassRegistration<name> MSG_REGISTRATION(name)(#name); \
+    class name : public CHookedNetMessage<name, MSG_REGISTRATION(name)>
+
 template <typename T, CMessageClassRegistration<T>& R>
 class CHookedNetMessage : public CNetMessage
 {

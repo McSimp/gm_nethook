@@ -7,10 +7,7 @@
 
 using namespace GarrysMod::Lua;
 
-class svc_Print;
-CMessageClassRegistration<svc_Print> Registration("svc_Print");
-
-class svc_Print : public CHookedNetMessage<svc_Print, Registration>
+IMPLEMENT_MESSAGE(svc_Print)
 {
 public:
     svc_Print() { m_bReliable = false; m_text = nullptr; };
@@ -43,7 +40,7 @@ public:
     {
         Lua.CheckType(1, Type::STRING);
         
-        svc_Print* obj = Registration.CreateNewMessage();
+        svc_Print* obj = MSG_REGISTRATION(svc_Print).CreateNewMessage();
         V_strcpy_safe(obj->m_textBuffer, Lua.GetString(1));
         obj->m_text = obj->m_textBuffer;
         Lua.PushBoundObject(obj);

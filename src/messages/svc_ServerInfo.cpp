@@ -7,10 +7,7 @@
 
 using namespace GarrysMod::Lua;
 
-class svc_ServerInfo;
-CMessageClassRegistration<svc_ServerInfo> Registration("svc_ServerInfo");
-
-class svc_ServerInfo : public CHookedNetMessage<svc_ServerInfo, Registration>
+IMPLEMENT_MESSAGE(svc_ServerInfo)
 {
 public:
     int         m_nProtocol;
@@ -350,7 +347,7 @@ public:
 
     static int LuaCreateObject(CLuaInterface& Lua)
     {
-        svc_ServerInfo* obj = Registration.CreateNewMessage();
+        svc_ServerInfo* obj = MSG_REGISTRATION(svc_ServerInfo).CreateNewMessage();
         Lua.PushBoundObject(obj);
 
         return 1;
