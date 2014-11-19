@@ -404,7 +404,7 @@ CLuaObject CLuaInterface::GetReturnObject(int iNum)
 
 void CLuaInterface::Call(int args, int returns)
 {
-    m_pLua->CallInternal(args, returns);
+    m_pLua->Call(args, returns);
 }
 
 bool CLuaInterface::CallGetBool(int args)

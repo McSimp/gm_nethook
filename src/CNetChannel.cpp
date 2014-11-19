@@ -30,7 +30,7 @@ int CNetChannel::GetPlayerNetChannelLua(CLuaInterface& Lua)
     CLuaObject playerEnt = Lua.GetObject(1);
 
     // Get player entity index
-    CLuaObject entIndex = Lua.GetMetaTable("Entity", GLua::TYPE_ENTITY).GetMember("EntIndex");
+    CLuaObject entIndex = Lua.GetMetaTable("Entity", Type::ENTITY).GetMember("EntIndex");
     entIndex.Push();
     playerEnt.Push();
 
