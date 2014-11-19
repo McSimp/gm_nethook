@@ -1,4 +1,6 @@
+#ifdef _DEBUG
 #pragma comment (linker, "/NODEFAULTLIB:libcmt")
+#endif
 
 #include "gm/Lua.hpp"
 #include "gm/CLuaInterface.hpp"
