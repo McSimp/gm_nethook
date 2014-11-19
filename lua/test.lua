@@ -9,17 +9,6 @@ function PlyMeta:PrintMessage(str)
 	netchan:SendNetMsg(msg)
 end
 
-local function HandleLuaFileDownload(data)
-	if true then
-		hex_dump(data:ReadBytes(data:GetNumBytesLeft()))
-		return
-	end
-
-	local info = string.format("File Number = %d, CRC = %d\n", data:ReadWord(), data:ReadLong())
-	print(info)
-	file.Append("file.txt", info .. util.Decompress(data:ReadBytes(data:GetNumBytesLeft())))
-end
-
 local serverInfoFormat = [[
 svc_ServerInfo:
 Protocol: %d
@@ -66,7 +55,17 @@ nethook.AddOutgoingHook("svc_ServerInfo", "TestServerInfo", function(msg)
 	msg:SetLoadingURL("http://steamcommunity.com")
 end)
 
---[[
+local function HandleLuaFileDownload(data)
+	if true then
+		hex_dump(data:ReadBytes(data:GetNumBytesLeft()))
+		return
+	end
+
+	local info = string.format("File Number = %d, CRC = %d\n", data:ReadWord(), data:ReadLong())
+	print(info)
+	file.Append("file.txt", info .. util.Decompress(data:ReadBytes(data:GetNumBytesLeft())))
+end
+
 nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 	local data = msg:GetData()
 	if data:GetNumBytesLeft() > 0 then
@@ -83,7 +82,7 @@ nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 		end
 	end
 end)
-]]
+
 function PlyMeta:TestFile()
 	local netchan = self:GetNetChannel()
 
@@ -129,8 +128,23 @@ util.AddNetworkString("pingas")
 util.AddNetworkString("pingascl")
 
 function TestMessage()
-	net.Start("pingas") net.WriteData("abc", 65500) net.Broadcast()
+	net.Start("pingas") net.WriteData("abc", 3) net.Broadcast()
 end
+
+function PlyMeta:SendPingas(str)
+	local netchan = self:GetNetChannel()
+	
+	local writer = nethook.bf_write(10)
+	writer:WriteByte(0)
+	writer:WriteWord(util.NetworkStringToID("pingas"))
+	writer:WriteBytes("abc", 3)
+
+	local msg = nethook.NewMessage("svc_GMod_ServerToClient")
+	msg:SetData(writer)
+
+	netchan:SendNetMsg(msg)
+end
+
 
 net.Receive("pingascl", function()
 	file.Write("file.txt", net.ReadData(65500))
