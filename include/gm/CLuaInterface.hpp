@@ -5,6 +5,7 @@
 
 #include "CLuaObject.hpp"
 #include "Lua.hpp"
+#include "dbg.h"
 
 namespace GarrysMod
 {
@@ -121,7 +122,9 @@ namespace GarrysMod
             {
                 UserData* ud = Lua.CheckAndGetRawUserData(1, T::LuaTypeID);
 
-                //printf("GC: type = %s, needsGC = %d\n", T::LuaMetaTableName, ud->needsGC);
+#ifdef _DEBUG
+                Msg("GC: type = %s, needsGC = %d\n", T::LuaMetaTableName, ud->needsGC);
+#endif
 
                 if (ud->needsGC)
                 {

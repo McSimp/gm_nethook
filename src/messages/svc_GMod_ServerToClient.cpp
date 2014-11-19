@@ -23,7 +23,7 @@ public:
     static int LuaCreateObject(CLuaInterface& Lua)
     {
         svc_GMod_ServerToClient* obj = MSG_REGISTRATION(svc_GMod_ServerToClient).CreateNewMessage();
-        Lua.PushBoundObject(obj); // TODO: THIS DOES ACTUALLY NEED TO BE FREED
+        Lua.PushBoundObject(obj);
         return 1;
     }
 
