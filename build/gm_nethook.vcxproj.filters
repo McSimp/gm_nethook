@@ -146,5 +146,8 @@
     <ClCompile Include="..\src\messages\svc_GetCvarValue.cpp">
       <Filter>Source Files\messages</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\messages\net_StringCmd.cpp">
+      <Filter>Source Files\messages</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
