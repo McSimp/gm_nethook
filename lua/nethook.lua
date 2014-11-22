@@ -13,13 +13,30 @@ local MessageFactory = nethook.MessageFactory
 local WriteHooks = {}
 local ProcessHooks = {}
 
+local function GetTotalHookCount(msgName)
+	local count = 0
+
+	if WriteHooks[msgName] ~= nil then
+		count = count + table.count(WriteHooks[msgName])
+	end
+
+	if ProcessHooks[msgName] ~= nil then
+		count = count + table.count(ProcessHooks[msgName])
+	end
+
+	return count
+end
+
 local function AddInternal(msgName, hookTable, hookName, func)
 	if not isfunction(func) then return end
 	if not isstring(msgName) then return end
 
 	-- No hooks exist for this message, so we need to attach to it
-	if hookTable[msgName] == nil then
+	if GetTotalHookCount(msgName) == 0 then
 		nethook.AttachMessage(msgName)
+	end
+
+	if hookTable[msgName] == nil then
 		hookTable[msgName] = {}
 	end
 
@@ -34,7 +51,7 @@ local function RemoveInternal(msgName, hookTable, hookName)
 
 	-- If we don't have any remaining hooks for this message, we can safely
 	-- detach from it.
-	if table.Count(hookTable[msgName]) == 0 then
+	if GetTotalHookCount(msgName) == 0 then
 		nethook.DetachMessage(msgName)
 	end
 end
@@ -64,7 +81,7 @@ local function ProcessCallback(msgName, msg)
 	return CallInternal(msgName, ProcessHooks, msg)
 end
 
--- nethook.SetProcessCallback(ProcessCallback)
+nethook.SetProcessCallback(ProcessCallback)
 
 -- ==========
 -- Public API

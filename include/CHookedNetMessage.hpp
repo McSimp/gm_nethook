@@ -31,13 +31,38 @@ public:
             if (ignoreMessage)
             {
 #ifdef _DEBUG
-                Msg("[nethook] Skipping message %s\n", R.GetMsgName().c_str());
+                Msg("[nethook] Skipping outgoing message %s\n", R.GetMsgName().c_str());
 #endif
                 return true;
             }
         }
 
         return R.CallOriginalWrite(this, buffer);
+    }
+
+    bool ProcessHook()
+    {
+        for (CLuaInterface& Lua : GarrysMod::Lua::g_StateManager.GetStates())
+        {
+            const CLuaObject& processCB = Lua.GetNethookProcessCallback();
+            if (processCB.IsNil())
+                continue;
+
+            processCB.Push();
+            Lua.Push(R.GetMsgName().c_str());
+            Lua.PushBoundObject(static_cast<T*>(this), false);
+
+            bool ignoreMessage = Lua.CallGetBool(2);
+            if (ignoreMessage)
+            {
+#ifdef _DEBUG
+                Msg("[nethook] Skipping incoming message %s\n", R.GetMsgName().c_str());
+#endif
+                return true;
+            }
+        }
+
+        return R.CallOriginalProcess(this);
     }
 
     static void InitializeLua(GarrysMod::Lua::CLuaInterface& Lua)

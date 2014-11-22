@@ -19,6 +19,7 @@ namespace NetMessageManager
     bool AttachMessage(const std::string& messageName);
     bool DetachMessage(const std::string& messageName);
     int SetWriteCallbackLua(GarrysMod::Lua::CLuaInterface& Lua);
+    int SetProcessCallbackLua(GarrysMod::Lua::CLuaInterface& Lua);
     int AttachMessageLua(GarrysMod::Lua::CLuaInterface& Lua);
     int DetachMessageLua(GarrysMod::Lua::CLuaInterface& Lua);
 }

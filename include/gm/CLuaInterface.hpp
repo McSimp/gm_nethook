@@ -101,6 +101,8 @@ namespace GarrysMod
             const CLuaObject&  GetHookCall();
             void               SetNethookWriteCallback(CLuaObject& obj);
             const CLuaObject&  GetNethookWriteCallback();
+            void               SetNethookProcessCallback(CLuaObject& obj);
+            const CLuaObject&  GetNethookProcessCallback();
 
             // Functions for interacting with bound classes
             template <class T>
@@ -157,6 +159,7 @@ namespace GarrysMod
             CLuaObject		m_E;
             CLuaObject		m_hookCall;
             CLuaObject      m_nethookWriteCallback;
+            CLuaObject      m_nethookProcessCallback;
         };
     }
 }

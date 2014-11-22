@@ -37,6 +37,7 @@ void InitializeNethook(CLuaInterface& Lua)
 
     CLuaObject nethookTable = Lua.GetNewTable();
     nethookTable.SetMember("SetWriteCallback", LuaStaticBindThunk<NetMessageManager::SetWriteCallbackLua>);
+    nethookTable.SetMember("SetProcessCallback", LuaStaticBindThunk<NetMessageManager::SetProcessCallbackLua>);
     nethookTable.SetMember("AttachMessage", LuaStaticBindThunk<NetMessageManager::AttachMessageLua>);
     nethookTable.SetMember("DetachMessage", LuaStaticBindThunk<NetMessageManager::DetachMessageLua>);
     nethookTable.SetMember("MessageFactory", Lua.GetNewTable());

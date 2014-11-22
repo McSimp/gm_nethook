@@ -155,14 +155,26 @@ namespace NetMessageManager
         return 0;
     }
 
+    int SetProcessCallbackLua(CLuaInterface& Lua)
+    {
+        Lua.CheckType(1, Type::FUNCTION);
+        Lua.SetNethookProcessCallback(Lua.GetObject(1));
+        return 0;
+    }
+
     int AttachMessageLua(CLuaInterface& Lua)
     {
         Lua.CheckType(1, Type::STRING);
+        const char* msgName = Lua.GetString(1);
 
-        if (!AttachMessage(Lua.GetString(1)))
+        if (!AttachMessage(msgName))
         {
             Lua.Error("Failed to attach to net message");
         }
+
+#ifdef _DEBUG
+        Msg("[nethook] Attaching to %s\n", msgName);
+#endif
 
         return 0;
     }
@@ -170,11 +182,16 @@ namespace NetMessageManager
     int DetachMessageLua(CLuaInterface& Lua)
     {
         Lua.CheckType(1, Type::STRING);
+        const char* msgName = Lua.GetString(1);
 
-        if (!DetachMessage(Lua.GetString(1)))
+        if (!DetachMessage(msgName))
         {
             Lua.Error("Failed to detach from net message");
         }
+
+#ifdef _DEBUG
+        Msg("[nethook] Detaching from %s\n", msgName);
+#endif
 
         return 0;
     }
