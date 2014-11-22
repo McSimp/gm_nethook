@@ -7,6 +7,7 @@ lua_bf_write::lua_bf_write(int nBytes)
 {
     unsigned char* buf = new unsigned char[nBytes];
     StartWriting(buf, nBytes);
+    Assert((unsigned char*)m_pData == buf);
 }
 
 lua_bf_write::~lua_bf_write()
