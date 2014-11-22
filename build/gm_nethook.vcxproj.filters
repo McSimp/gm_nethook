@@ -140,5 +140,11 @@
     <ClCompile Include="..\src\lua_bf_write.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="$(SOURCE_SDK_2013)\public\tier0\memoverride.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\messages\svc_GetCvarValue.cpp">
+      <Filter>Source Files\messages</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
