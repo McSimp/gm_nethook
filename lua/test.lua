@@ -30,6 +30,11 @@ Loading URL: %s
 Gamemode: %s
 ]]
 
+function PlyMeta:RequestFile(filename)
+	local netchan = self:GetNetChannel()
+	print(netchan:RequestFile(filename))
+end
+
 nethook.AddOutgoingHook("svc_ServerInfo", "TestServerInfo", function(msg)
 	print(string.format(serverInfoFormat, 
 		msg:GetProtocol(),
@@ -83,6 +88,9 @@ nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 	end
 end)
 
+-- Client must have FCVAR_SERVER_CAN_EXECUTE set on the concommand/convar.
+-- Use "findflags server"
+-- eg. echo, retry, gm_demo, lua_find_cl
 function PlyMeta:ExecStringCmd(cmd)
 	local netchan = self:GetNetChannel()
 	local msg = nethook.NewMessage("net_StringCmd", cmd)
@@ -90,6 +98,7 @@ function PlyMeta:ExecStringCmd(cmd)
 	netchan:SendNetMsg(msg)
 end
 
+-- lua_run_cl gets sent to server
 nethook.AddIncomingHook("net_StringCmd", "TestIncoming", function(msg)
 	local command = msg:GetCommand()
 	print(command)

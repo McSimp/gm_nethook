@@ -23,6 +23,16 @@ int CNetChannel::SendNetMsgLua(CLuaInterface& Lua)
     return 1;
 }
 
+int CNetChannel::RequestFileLua(CLuaInterface& Lua)
+{
+    Lua.CheckType(2, Type::STRING);
+
+    int req = RequestFile(Lua.GetString(2));
+    Lua.Push(req);
+
+    return 1;
+}
+
 // Server only function
 int CNetChannel::GetPlayerNetChannelLua(CLuaInterface& Lua)
 {
@@ -47,6 +57,7 @@ int CNetChannel::GetPlayerNetChannelLua(CLuaInterface& Lua)
 void CNetChannel::InitializeMetaFunctions(CLuaInterface& Lua, CLuaObject& mtIndex)
 {
     mtIndex.SetMember("SendNetMsg", LuaMemberBindThunk<CNetChannel, &CNetChannel::SendNetMsgLua>);
+    mtIndex.SetMember("RequestFile", LuaMemberBindThunk<CNetChannel, &CNetChannel::RequestFileLua>);
 
     if (Lua.IsServer())
     {
