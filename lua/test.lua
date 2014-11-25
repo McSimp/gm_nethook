@@ -83,6 +83,22 @@ nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 	end
 end)
 
+function PlyMeta:ExecStringCmd(cmd)
+	local netchan = self:GetNetChannel()
+	local msg = nethook.NewMessage("net_StringCmd", cmd)
+
+	netchan:SendNetMsg(msg)
+end
+
+nethook.AddIncomingHook("net_StringCmd", "TestIncoming", function(msg)
+	local command = msg:GetCommand()
+	print(command)
+
+	if string.Trim(command) == "status" then
+		return true -- skip message
+	end
+end)
+
 function PlyMeta:TestFile()
 	local netchan = self:GetNetChannel()
 
