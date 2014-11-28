@@ -3,11 +3,11 @@
 
 using namespace GarrysMod::Lua;
 
-lua_bf_read::lua_bf_read(const unsigned char* oldBuf, int writeSize)
+lua_bf_read::lua_bf_read(const unsigned char* oldBuf, int numBytes, int numBits)
 {
-    unsigned char* buf = new unsigned char[writeSize];
-    memcpy(buf, oldBuf, writeSize);
-    StartReading(buf, writeSize);
+    unsigned char* buf = new unsigned char[numBytes];
+    memcpy(buf, oldBuf, numBytes);
+    StartReading(buf, numBytes, 0, numBits);
     Assert(m_pData == buf);
 }
 

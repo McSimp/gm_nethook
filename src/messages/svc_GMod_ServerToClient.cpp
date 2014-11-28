@@ -27,19 +27,29 @@ public:
         return 1;
     }
 
+    bool UseWrite()
+    {
+        return m_read.m_nDataBits == -1;
+    }
+
+    bool UseRead()
+    {
+        return m_write.m_nDataBits == -1;
+    }
+
     int GetDataLua(CLuaInterface& Lua)
     {
-        // Return whichever bitbuf has the correct number of bits in it
+        // Return whichever bitbuf has the actual data in it
         lua_bf_read* reader = nullptr;
 
-        if (m_read.GetNumBitsLeft() == m_numBits)
+        if (UseRead())
         {
 #ifdef _DEBUG
             Msg("[nethook] Using m_read for data\n");
 #endif
             reader = new lua_bf_read(m_read, m_numBits);
         }
-        else if (m_write.GetNumBitsWritten() == m_numBits)
+        else if (UseWrite())
         {
 #ifdef _DEBUG
             Msg("[nethook] Using m_write for data\n");
@@ -48,7 +58,7 @@ public:
         }
         else
         {
-            Lua.Error("m_numBits does not match m_read.GetNumBitsLeft() or m_write.GetNumBitsWritten()");
+            Lua.Error("neither m_read nor m_write has m_nDataBits == -1");
         }
 
         Lua.PushBoundObject(reader);
