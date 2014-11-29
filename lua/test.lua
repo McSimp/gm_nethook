@@ -75,14 +75,10 @@ nethook.AddOutgoingHook("svc_GMod_ServerToClient", "TestOutput", function(msg)
 	local data = msg:GetData()
 	if data:GetNumBytesLeft() > 0 then
 		local msgType = data:ReadByte()
+		print("svc_GMod_ServerToClient: " .. tostring(msgType))
 		if msgType == 4 then
 			HandleLuaFileDownload(data)
-		elseif msgType == 0 then
-			if data:ReadWord() == util.NetworkStringToID("pingas") then
-				file.Write("file.txt", data:ReadBytes(data:GetNumBytesLeft()))
-			end
 		else
-			print(msgType)
 			hex_dump(data:ReadBytes(data:GetNumBytesLeft()))
 		end
 	end

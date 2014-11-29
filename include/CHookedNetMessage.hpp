@@ -30,9 +30,7 @@ public:
             bool ignoreMessage = Lua.CallGetBool(2);
             if (ignoreMessage)
             {
-#ifdef _DEBUG
-                Msg("[nethook] Skipping outgoing message %s\n", R.GetMsgName().c_str());
-#endif
+                DevMsg("[nethook] Skipping outgoing message %s\n", R.GetMsgName().c_str());
                 return true;
             }
         }
@@ -55,9 +53,7 @@ public:
             bool ignoreMessage = Lua.CallGetBool(2);
             if (ignoreMessage)
             {
-#ifdef _DEBUG
-                Msg("[nethook] Skipping incoming message %s\n", R.GetMsgName().c_str());
-#endif
+                DevMsg("[nethook] Skipping incoming message %s\n", R.GetMsgName().c_str());
                 return true;
             }
         }

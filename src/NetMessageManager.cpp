@@ -18,9 +18,8 @@ namespace NetMessageManager
         // that it's a valid address in the module's address space?
 
         const char* messageName = msg->GetName();
-#ifdef _DEBUG
-        Msg("[nethook] Found Message: %s\n", messageName);
-#endif
+
+        DevMsg("[nethook] Found Message: %s\n", messageName);
 
         auto& messages = CNetMessageRegistration::RegisteredMessages;
 
@@ -172,9 +171,7 @@ namespace NetMessageManager
             Lua.Error("Failed to attach to net message");
         }
 
-#ifdef _DEBUG
-        Msg("[nethook] Attaching to %s\n", msgName);
-#endif
+        DevMsg("[nethook] Attaching to %s\n", msgName);
 
         return 0;
     }
@@ -189,9 +186,7 @@ namespace NetMessageManager
             Lua.Error("Failed to detach from net message");
         }
 
-#ifdef _DEBUG
-        Msg("[nethook] Detaching from %s\n", msgName);
-#endif
+        DevMsg("[nethook] Detaching from %s\n", msgName);
 
         return 0;
     }

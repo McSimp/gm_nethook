@@ -44,16 +44,12 @@ public:
 
         if (UseRead())
         {
-#ifdef _DEBUG
-            Msg("[nethook] Using m_read for data\n");
-#endif
+            DevMsg("[nethook] Using m_read for data\n");
             reader = new lua_bf_read(m_read, m_numBits);
         }
         else if (UseWrite())
         {
-#ifdef _DEBUG
-            Msg("[nethook] Using m_write for data\n");
-#endif
+            DevMsg("[nethook] Using m_write for data\n");
             reader = new lua_bf_read(m_write, m_numBits);
         }
         else
@@ -71,22 +67,38 @@ public:
 
         lua_bf_write* writer = static_cast<lua_bf_write*>(Lua.CheckAndGetUserData(2, lua_bf_write::LuaTypeID));
         
+        if (!UseRead() && !UseWrite())
+        {
+            Lua.Error("neither m_read nor m_write has m_nDataBits == -1");
+        }
+
         // Copy the data out of the Lua buffer so it can be GC'd.
         m_write.StartWriting(messageData, sizeof(messageData));
         m_write.WriteBits(writer->GetBasePointer(), writer->GetNumBitsWritten());
 
-        // Update pointers for m_read as well
-        m_read.StartReading(messageData, sizeof(messageData), 0, writer->GetNumBitsWritten());
+        if (UseRead())
+        {
+            // Update members of m_read and reset m_write since it's not meant to be used
+            m_read.StartReading(messageData, sizeof(messageData), 0, writer->GetNumBitsWritten());
+            m_write = bf_write();
+        }
 
         m_numBits = writer->GetNumBitsWritten();
 
         return 0;
     }
 
+    int GetNumBitsLua(CLuaInterface& Lua)
+    {
+        Lua.Push(m_numBits);
+        return 1;
+    }
+
     static void InitializeMetaFunctions(CLuaInterface& Lua, CLuaObject& mtIndex)
     {
         mtIndex.SetMember("GetData", LuaMemberBindThunk<svc_GMod_ServerToClient, &GetDataLua>);
         mtIndex.SetMember("SetData", LuaMemberBindThunk<svc_GMod_ServerToClient, &SetDataLua>);
+        mtIndex.SetMember("GetNumBits", LuaMemberBindThunk<svc_GMod_ServerToClient, &GetNumBitsLua>);
     }
 };
 

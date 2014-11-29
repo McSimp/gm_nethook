@@ -125,7 +125,7 @@ namespace GarrysMod
                 UserData* ud = Lua.CheckAndGetRawUserData(1, T::LuaTypeID);
 
 #ifdef _DEBUG
-                Msg("GC: type = %s, needsGC = %d\n", T::LuaMetaTableName, ud->needsGC);
+                DevMsg("GC: type = %s, needsGC = %d\n", T::LuaMetaTableName, ud->needsGC);
 #endif
 
                 if (ud->needsGC)
