@@ -152,5 +152,8 @@
     <ClCompile Include="..\src\messages\net_StringCmd.cpp">
       <Filter>Source Files\messages</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\messages\clc_GMod_ClientToServer.cpp">
+      <Filter>Source Files\messages</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

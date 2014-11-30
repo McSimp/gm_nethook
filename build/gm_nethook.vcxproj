@@ -127,6 +127,7 @@
     <ClCompile Include="..\src\lua_bf_write.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="$(SOURCE_SDK_2013)\public\tier0\memoverride.cpp" />
+    <ClCompile Include="..\src\messages\clc_GMod_ClientToServer.cpp" />
     <ClCompile Include="..\src\messages\net_StringCmd.cpp" />
     <ClCompile Include="..\src\messages\svc_GetCvarValue.cpp" />
     <ClCompile Include="..\src\messages\svc_GMod_ServerToClient.cpp" />
