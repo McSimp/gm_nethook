@@ -93,6 +93,9 @@
     <ClInclude Include="..\include\lua_bf_write.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\CGModNetMessage.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\gm\CLuaInterface.cpp">

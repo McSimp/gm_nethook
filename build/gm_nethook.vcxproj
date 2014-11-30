@@ -90,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\CGModNetMessage.hpp" />
     <ClInclude Include="..\include\CHookedNetMessage.hpp" />
     <ClInclude Include="..\include\CNetChannel.hpp" />
     <ClInclude Include="..\include\CNetMessage.hpp" />

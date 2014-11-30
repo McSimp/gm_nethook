@@ -6,10 +6,13 @@
 
 #define MSG_REGISTRATION(name) MsgRegistration##name
 
-#define IMPLEMENT_MESSAGE(name) \
+#define IMPLEMENT_MESSAGE_BASECLASS(name, baseclass) \
     class name; \
     CMessageClassRegistration<name> MSG_REGISTRATION(name)(#name); \
-    class name : public CHookedNetMessage<name, MSG_REGISTRATION(name)>
+    typedef baseclass<name, MSG_REGISTRATION(name)> BaseClass; \
+    class name : public baseclass<name, MSG_REGISTRATION(name)>
+
+#define IMPLEMENT_MESSAGE(name) IMPLEMENT_MESSAGE_BASECLASS(name, CHookedNetMessage)
 
 template <typename T, CMessageClassRegistration<T>& R>
 class CHookedNetMessage : public CNetMessage
